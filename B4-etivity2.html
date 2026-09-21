@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E-tivity 4.2 – Tabelle di contingenza e test chi-quadrato</title>
+<style>
+:root{
+  --blue:#014082;--blue2:#0260b5;--light:#e8f3ff;--ink:#20242c;--muted:#667085;
+  --orange:#a75c00;--orange2:#fff6e8;--green:#2e7d32;--red:#b42318;
+  --purple:#6d5bd0;--teal:#147d8d;--line:#dce5ef;--soft:#f4f7fb
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);font-family:Arial,"Helvetica Neue",sans-serif;color:var(--ink)}
+.wrap{max-width:1180px;margin:28px auto;padding:0 16px 55px}
+.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;text-align:center;padding:38px 24px 28px;border-radius:12px 12px 0 0}
+.header small{letter-spacing:2px;font-weight:800;opacity:.82}
+.header h1{font-size:32px;margin:9px 0 7px}.header p{font-size:18px;margin:0}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-top:0;padding:11px}
+.pill{border:1px solid #cbd9e9;border-radius:999px;padding:7px 11px;color:var(--blue);font-size:14px;font-weight:800}
+.tabs{display:flex;overflow:auto;background:#fff;border:1px solid var(--line);border-top:0;border-bottom:2px solid var(--blue)}
+.tab{flex:1;min-width:132px;border:0;border-right:1px solid var(--line);border-bottom:3px solid transparent;background:#fff;padding:12px 9px;color:#697386;font-weight:800;cursor:pointer}
+.tab.active{background:var(--light);color:var(--blue);border-bottom-color:var(--blue);margin-bottom:-2px}
+.main{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:27px 30px;box-shadow:0 12px 28px rgba(23,39,64,.08)}
+.section{display:none}.section.active{display:block}
+.intro{background:var(--blue);color:#fff;border-radius:11px;padding:19px 22px;margin-bottom:20px}
+.intro h2{margin:0 0 7px;font-size:22px}.intro p{margin:0;line-height:1.6}
+.card{border:1px solid #e3e8ef;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.card-head{padding:14px 19px;font-size:18px;font-weight:800;background:var(--light);color:var(--blue)}
+.card-head.orange{background:var(--orange2);color:#8b4707}
+.card-body{padding:19px 21px;line-height:1.65}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini{border:1px solid #e3e8ef;border-radius:12px;padding:16px;line-height:1.55}.mini strong{color:var(--blue)}
+.formula{background:#f0f6ff;border:1px solid #bfd6f2;border-radius:10px;padding:14px;text-align:center;color:var(--blue);font-size:18px;font-weight:800;line-height:1.7;margin:13px 0}
+.tip,.warn,.ok{padding:13px 15px;border-radius:0 9px 9px 0;margin:13px 0;line-height:1.6}
+.tip{background:#f4f9ff;border-left:5px solid var(--blue)}
+.warn{background:#fff4e5;border-left:5px solid var(--orange)}
+.ok{background:#eef8ef;border-left:5px solid var(--green)}
+.question{background:var(--orange2);border:2px solid var(--orange);border-radius:12px;padding:18px;margin:18px 0}
+.question h3{margin:0 0 8px;color:#8e4c00}
+.choice{display:block;width:100%;text-align:left;border:1px solid #d6dee8;background:#fff;border-radius:9px;padding:11px 13px;margin:9px 0;font-weight:700;cursor:pointer}
+.choice.good{background:#eaf7ec;border-color:#6ab375;color:#1f6a29}.choice.bad{background:#fff0ef;border-color:#df8078;color:#92231c}
+.feedback{display:none;padding:12px 14px;border-radius:8px;margin-top:12px}.feedback.show{display:block}
+.feedback.good{background:#eef8ef;color:#1f6a29}.feedback.bad{background:#fff0ef;color:#8e2018}
+.controls{background:#fff9f0;border:2px solid var(--orange);border-radius:12px;padding:17px}
+.control{margin:12px 0}.control label{display:flex;justify-content:space-between;font-weight:800;margin-bottom:7px}
+.control input[type=range]{width:100%;accent-color:var(--orange)}
+select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:14px 0}
+.kpi{background:#f8fbff;border:1px solid #dce9f7;border-radius:10px;padding:12px;text-align:center}
+.kpi span{display:block;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase}
+.kpi b{display:block;color:var(--blue);font-size:20px;margin-top:5px}
+.canvas-wrap{background:#fff;border:1px solid #dfe6ee;border-radius:12px;padding:10px;overflow:hidden}
+.canvas-wrap canvas{width:100%;height:auto;display:block}
+.legend{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;color:#475467;font-size:13px;margin-top:8px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center}
+th{background:#f3f7fb;color:var(--blue)}td.clickable{cursor:pointer;font-weight:800}td.selected{outline:3px solid var(--orange);outline-offset:-3px}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.modes button{border:1.5px solid #c7d2df;background:#fff;color:var(--blue);padding:9px 13px;border-radius:999px;font-weight:800;cursor:pointer}
+.modes button.active{background:var(--blue);color:#fff}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:25px;padding-top:17px;border-top:1px solid var(--line)}
+.btn{border:0;border-radius:8px;padding:10px 17px;font-weight:800;cursor:pointer}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#eaf2fb;color:var(--blue)}
+.progress{height:9px;background:#e5eaf0;border-radius:99px;overflow:hidden;margin:10px 0 18px}.progress div{height:100%;background:var(--blue);width:0}
+.positive{background:#e2f3e5;color:#195c24}.negative{background:#fff0ef;color:#8e2018}.neutral{background:#f4f6f8;color:#475467}
+.calc-line{font-family:Georgia,serif;background:#fbfdff;border:1px dashed #9ebfe4;border-radius:9px;padding:13px;margin:10px 0;line-height:1.75;color:#193d68}
+@media(max-width:850px){
+  .grid2,.grid3{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}
+  .main{padding:20px 16px}.header h1{font-size:27px}.tab{min-width:150px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="header">
+  <small>BLOCCO 4 · E-TIVITY 2</small>
+  <h1>Tabelle di contingenza e test chi-quadrato</h1>
+  <p>Indipendenza, contingenze e intensità della connessione</p>
+</header>
+
+<div class="meta">
+  <span class="pill">60 minuti</span>
+  <span class="pill">Esempio 3 × 3</span>
+  <span class="pill">Frequenze osservate e teoriche</span>
+  <span class="pill">V di Cramér</span>
+</div>
+
+<nav class="tabs">
+  <button class="tab active" data-id="s1">1. La tabella</button>
+  <button class="tab" data-id="s2">2. Indipendenza</button>
+  <button class="tab" data-id="s3">3. Teoriche</button>
+  <button class="tab" data-id="s4">4. Calcolo di χ²</button>
+  <button class="tab" data-id="s5">5. Distribuzione</button>
+  <button class="tab" data-id="s6">6. Quali celle?</button>
+  <button class="tab" data-id="s7">7. Intensità</button>
+  <button class="tab" data-id="s8">8. Verifica</button>
+</nav>
+
+<main class="main">
+
+<section id="s1" class="section active">
+<div class="intro">
+  <h2>Prima del test: leggere una tabella 3 × 3</h2>
+  <p>L'impresa registra il tipo di campagna e l'esito commerciale. Entrambe le variabili hanno tre modalità.</p>
+</div>
+
+<div class="card">
+  <div class="card-head">Esempio guidato: campagna ed esito del cliente</div>
+  <div class="card-body">
+    <p>Per 600 clienti distinguiamo tra acquisto premium, acquisto standard e nessun acquisto.</p>
+    <div class="grid2">
+      <div>
+        <div class="table-wrap"><table id="introTable"></table></div>
+        <div class="modes">
+          <button class="introMode active" data-mode="count">Conteggi</button>
+          <button class="introMode" data-mode="row">Percentuali di riga</button>
+          <button class="introMode" data-mode="col">Percentuali di colonna</button>
+        </div>
+      </div>
+      <div>
+        <div class="canvas-wrap"><canvas id="introCanvas" width="900" height="500"></canvas></div>
+        <div class="legend">
+          <span><i class="dot" style="background:#0260b5"></i>Premium</span>
+          <span><i class="dot" style="background:#6d5bd0"></i>Standard</span>
+          <span><i class="dot" style="background:#dce5ef"></i>Nessun acquisto</span>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><strong>Per confrontare le campagne</strong> osserviamo soprattutto le percentuali di riga: ogni riga descrive la distribuzione degli esiti all'interno di una campagna.</div>
+  </div>
+</div>
+
+<div class="question">
+  <h3>Quale lettura è corretta?</h3>
+  <button class="choice qIntro" data-ok="1">Con Social media il 57,7% dei clienti acquista il prodotto premium.</button>
+  <button class="choice qIntro" data-ok="0">Il 57,7% di tutti gli acquisti premium proviene necessariamente dai Social media.</button>
+  <button class="choice qIntro" data-ok="0">Le percentuali di riga e di colonna hanno sempre lo stesso significato.</button>
+  <div id="introFeedback" class="feedback"></div>
+</div>
+
+<div class="nav"><span></span><button class="btn primary next" data-next="s2">Continua →</button></div>
+</section>
+
+<section id="s2" class="section">
+<div class="intro">
+  <h2>Indipendenza e regola del prodotto</h2>
+  <p>Sotto indipendenza, la probabilità congiunta è il prodotto delle probabilità marginali.</p>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-head">Dalla probabilità alla frequenza teorica</div>
+    <div class="card-body">
+      <div class="formula">P(Aᵢ ∩ Bⱼ)=P(Aᵢ)P(Bⱼ)</div>
+      <p>I gruppi non hanno la stessa numerosità: 260 clienti hanno ricevuto la campagna Social media, 210 l'E-mail e 130 nessuna campagna. Anche i totali degli esiti sono differenti.</p>
+      <div class="calc-line">
+        P(Social)=260/600=0,433<br>
+        P(Premium)=260/600=0,433<br>
+        P(Social ∩ Premium)=0,433×0,433=0,188<br>
+        E=600×0,188=112,67
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head orange">Ipotesi del test</div>
+    <div class="card-body">
+      <div class="formula">H₀: campagna ed esito sono indipendenti</div>
+      <div class="formula">H₁: campagna ed esito non sono indipendenti</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">Confronta due strutture con gli stessi margini</div>
+  <div class="card-body">
+    <div class="modes">
+      <button class="structureBtn active" data-mode="ind">Indipendenza</button>
+      <button class="structureBtn" data-mode="max">Massima connessione</button>
+    </div>
+    <div class="grid2">
+      <div>
+        <div class="table-wrap"><table id="structureTable"></table></div>
+        <div class="kpis">
+          <div class="kpi"><span>Premium social</span><b id="structureA">33,3%</b></div>
+          <div class="kpi"><span>Standard e-mail</span><b id="structureB">33,3%</b></div>
+          <div class="kpi"><span>Nessun acquisto</span><b id="structureC">33,3%</b></div>
+          <div class="kpi"><span>V di Cramér</span><b id="structureV">0,000</b></div>
+        </div>
+      </div>
+      <div>
+        <div class="canvas-wrap"><canvas id="structureCanvas" width="900" height="500"></canvas></div>
+        <div class="legend">
+          <span><i class="dot" style="background:#0260b5"></i>Premium</span>
+          <span><i class="dot" style="background:#6d5bd0"></i>Standard</span>
+          <span><i class="dot" style="background:#dce5ef"></i>Nessun acquisto</span>
+        </div>
+      </div>
+    </div>
+    <div id="structureNote" class="tip"><strong>Indipendenza:</strong> ogni campagna presenta la stessa distribuzione: 33,3%, 33,3%, 33,3%.</div>
+  </div>
+</div>
+
+<div class="nav"><button class="btn secondary prev" data-prev="s1">← Indietro</button><button class="btn primary next" data-next="s3">Continua →</button></div>
+</section>
+
+<section id="s3" class="section">
+<div class="intro">
+  <h2>Osservate, teoriche e contingenze</h2>
+  <p>Chiamiamo contingenza la differenza tra frequenza osservata e frequenza teorica sotto indipendenza.</p>
+</div>
+
+<div class="formula">Eᵢⱼ=(totale riga i × totale colonna j)/n</div>
+<div class="formula">Contingenza cᵢⱼ=Oᵢⱼ−Eᵢⱼ</div>
+
+<div class="card">
+  <div class="card-head">Esplora le nove celle</div>
+  <div class="card-body">
+    <div class="modes">
+      <button class="matrixMode active" data-mode="obs">Osservate</button>
+      <button class="matrixMode" data-mode="exp">Teoriche</button>
+      <button class="matrixMode" data-mode="diff">Contingenze O−E</button>
+      <button class="matrixMode" data-mode="contrib">Contributi a χ²</button>
+    </div>
+    <div class="grid2">
+      <div class="table-wrap"><table id="matrixTable"></table></div>
+      <div class="question">
+        <h3 id="cellTitle">Social media × Premium</h3>
+        <div class="formula" id="expectedFormula">E=(260×260)/600=112,67</div>
+        <div class="kpis" style="grid-template-columns:1fr 1fr">
+          <div class="kpi"><span>Osservata O</span><b id="cellO">150</b></div>
+          <div class="kpi"><span>Teorica E</span><b id="cellE">112,67</b></div>
+          <div class="kpi"><span>Contingenza</span><b id="cellD">37,33</b></div>
+          <div class="kpi"><span>Contributo a χ²</span><b id="cellQ">12,37</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="warn"><strong>Le contingenze si compensano.</strong> In ogni riga e colonna la somma delle differenze O−E è zero; per costruire una misura complessiva non possiamo limitarci a sommarle.</div>
+
+<div class="nav"><button class="btn secondary prev" data-prev="s2">← Indietro</button><button class="btn primary next" data-next="s4">Continua →</button></div>
+</section>
+
+<section id="s4" class="section">
+<div class="intro">
+  <h2>Calcoliamo davvero il chi-quadrato</h2>
+  <p>Ogni contingenza viene elevata al quadrato e rapportata alla frequenza teorica della cella. Il chi-quadrato è la somma dei nove contributi.</p>
+</div>
+
+<div class="formula">χ²=ΣᵢΣⱼ (Oᵢⱼ−Eᵢⱼ)²/Eᵢⱼ</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-head">Un contributo, passo per passo</div>
+    <div class="card-body">
+      <p>Per la cella Social media × Premium:</p>
+      <div class="calc-line">
+        O=90<br>
+        E=(260×260)/600=112,67<br>
+        O−E=23,33<br>
+        (O−E)²/E=(23,33²)/66,67=8,17
+      </div>
+      <p>Il quadrato rende positivi sia gli scostamenti in eccesso sia quelli in difetto.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head orange">La somma dei nove contributi</div>
+    <div class="card-body">
+      <div class="calc-line" id="chiSum"></div>
+      <div class="kpis" style="grid-template-columns:1fr 1fr">
+        <div class="kpi"><span>χ² osservato</span><b id="chiValue">47,89</b></div>
+        <div class="kpi"><span>Gradi di libertà</span><b>4</b></div>
+        <div class="kpi"><span>p-value</span><b id="chiP">&lt;0,001</b></div>
+        <div class="kpi"><span>Decisione</span><b>Rifiuta H₀</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">Contributi delle celle</div>
+  <div class="card-body"><div class="canvas-wrap"><canvas id="contributionCanvas" width="900" height="500"></canvas></div></div>
+</div>
+
+<div class="formula">gdl=(r−1)(c−1)=(3−1)(3−1)=4</div>
+<div class="tip"><strong>Perché quattro?</strong> Fissati i margini, possiamo scegliere liberamente quattro celle; le altre cinque sono determinate dai totali di riga e di colonna.</div>
+
+<div class="nav"><button class="btn secondary prev" data-prev="s3">← Indietro</button><button class="btn primary next" data-next="s5">Continua →</button></div>
+</section>
+
+<section id="s5" class="section">
+<div class="intro">
+  <h2>Dalla statistica osservata al p-value</h2>
+  <p>Sotto H₀, la statistica segue approssimativamente una distribuzione chi-quadrato con quattro gradi di libertà.</p>
+</div>
+
+<div class="grid2">
+  <div>
+    <div class="canvas-wrap"><canvas id="distributionCanvas" width="900" height="500"></canvas></div>
+    <div class="legend">
+      <span><i class="dot" style="background:#0260b5"></i>Distribuzione χ²</span>
+      <span><i class="dot" style="background:#a75c00"></i>Valore critico</span>
+      <span><i class="dot" style="background:#b42318"></i>χ² osservato</span>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="control">
+      <label>Livello di significatività</label>
+      <select id="alpha">
+        <option value="0.10">α=0,10</option>
+        <option value="0.05" selected>α=0,05</option>
+        <option value="0.01">α=0,01</option>
+      </select>
+    </div>
+    <div class="kpis" style="grid-template-columns:1fr 1fr">
+      <div class="kpi"><span>χ² osservato</span><b id="distObs">47,89</b></div>
+      <div class="kpi"><span>χ² critico</span><b id="distCrit">9,49</b></div>
+      <div class="kpi"><span>p-value</span><b id="distP">&lt;0,001</b></div>
+      <div class="kpi"><span>gdl</span><b>4</b></div>
+    </div>
+    <div class="tip"><strong>La distribuzione è asimmetrica verso destra</strong> e assume solo valori non negativi.</div>
+    <div class="warn"><strong>Il p-value</strong> è l'area a destra del valore osservato.</div>
+  </div>
+</div>
+
+<div class="nav"><button class="btn secondary prev" data-prev="s4">← Indietro</button><button class="btn primary next" data-next="s6">Continua →</button></div>
+</section>
+
+<section id="s6" class="section">
+<div class="intro">
+  <h2>Quali celle spiegano la connessione?</h2>
+  <p>Dopo il test globale osserviamo i residui di Pearson, cioè le contingenze espresse sulla scala della frequenza teorica.</p>
+</div>
+
+<div class="formula">Residuo di Pearson=(Oᵢⱼ−Eᵢⱼ)/√Eᵢⱼ</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-head">Residui cella per cella</div>
+    <div class="card-body"><div class="table-wrap"><table id="residualTable"></table></div></div>
+  </div>
+  <div class="card">
+    <div class="card-head orange">Come leggerli</div>
+    <div class="card-body">
+      <div class="ok"><strong>Positivo:</strong> più casi del previsto sotto indipendenza.</div>
+      <div class="warn"><strong>Negativo:</strong> meno casi del previsto.</div>
+      <div class="tip"><strong>Vicino a zero:</strong> cella sostanzialmente compatibile con l'indipendenza.</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid3">
+  <div class="mini"><strong>Social × Premium</strong><p>Più clienti premium del previsto.</p></div>
+  <div class="mini"><strong>E-mail × Standard</strong><p>Più acquisti standard del previsto.</p></div>
+  <div class="mini"><strong>Nessuna × Nessun acquisto</strong><p>Molti più non acquirenti del previsto.</p></div>
+</div>
+
+<div class="nav"><button class="btn secondary prev" data-prev="s5">← Indietro</button><button class="btn primary next" data-next="s7">Continua →</button></div>
+</section>
+
+<section id="s7" class="section">
+<div class="intro">
+  <h2>Significatività e intensità della connessione</h2>
+  <p>Il p-value dipende anche dalla numerosità; il V di Cramér descrive invece l'intensità relativa della connessione.</p>
+</div>
+
+<div class="formula">V=√[χ²/(n×min(r−1,c−1))]</div>
+
+<div class="grid2">
+  <div class="controls">
+    <div class="control">
+      <label>Moltiplica la numerosità <span id="multLabel">1×</span></label>
+      <input id="multiplier" type="range" min="1" max="10" value="1">
+    </div>
+    <p>Le percentuali rimangono identiche: cambiano soltanto i conteggi.</p>
+    <div class="kpis" style="grid-template-columns:1fr 1fr">
+      <div class="kpi"><span>n totale</span><b id="strengthN">600</b></div>
+      <div class="kpi"><span>χ²</span><b id="strengthChi">47,89</b></div>
+      <div class="kpi"><span>p-value</span><b id="strengthP">&lt;0,001</b></div>
+      <div class="kpi"><span>V di Cramér</span><b id="strengthV">0,200</b></div>
+    </div>
+  </div>
+  <div>
+    <div class="canvas-wrap"><canvas id="strengthCanvas" width="900" height="500"></canvas></div>
+    <div class="legend">
+      <span><i class="dot" style="background:#0260b5"></i>χ² aumenta con n</span>
+      <span><i class="dot" style="background:#a75c00"></i>V resta costante</span>
+    </div>
+  </div>
+</div>
+
+<div class="ok"><strong>Conclusione:</strong> una connessione invariata diventa più facilmente significativa in un campione grande. Per questo p-value e intensità del legame rispondono a domande diverse.</div>
+
+<div class="grid2">
+  <div class="mini"><strong>Condizioni di applicazione</strong><p>Osservazioni indipendenti, categorie mutuamente esclusive e frequenze teoriche non troppo piccole.</p></div>
+  <div class="mini"><strong>Tabelle 2 × 2 con piccoli conteggi</strong><p>Può essere preferibile il test esatto di Fisher.</p></div>
+</div>
+
+<div class="warn"><strong>Collegamento con Simpson:</strong> il test descrive la tabella analizzata. Una terza variabile può ancora modificare o invertire la relazione marginale.</div>
+
+<div class="nav"><button class="btn secondary prev" data-prev="s6">← Indietro</button><button class="btn primary next" data-next="s8">Verifica →</button></div>
+</section>
+
+<section id="s8" class="section">
+<div class="intro"><h2>Verifica finale</h2><p>Dieci domande su indipendenza, frequenze teoriche, contingenze, χ² e V di Cramér.</p></div>
+<div class="progress"><div id="quizProgress"></div></div>
+<div id="quizBox"></div>
+<div class="nav"><button class="btn secondary prev" data-prev="s7">← Indietro</button><button class="btn primary" id="restartQuiz">Ricomincia</button></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(x,d=2)=>Number(x).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+const rowNames=['Social media','E-mail','Nessuna campagna'];
+const colNames=['Premium','Standard','Nessun acquisto'];
+const colors=['#0260b5','#6d5bd0','#dce5ef'];
+const observedBase=[[150,70,40],[70,95,45],[40,45,45]];
+let introMode='count',structureMode='ind',matrixMode='obs',selectedCell=[0,0];
+
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='s5')drawDistribution();
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>showSection(b.dataset.id));
+document.querySelectorAll('.next').forEach(b=>b.onclick=()=>showSection(b.dataset.next));
+document.querySelectorAll('.prev').forEach(b=>b.onclick=()=>showSection(b.dataset.prev));
+
+function bindQuestion(selector,feedbackId,good,bad){
+  document.querySelectorAll(selector).forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(selector).forEach(x=>x.classList.remove('good','bad'));
+    const ok=b.dataset.ok==='1';b.classList.add(ok?'good':'bad');
+    const f=$(feedbackId);f.className='feedback show '+(ok?'good':'bad');f.textContent=ok?good:bad;
+  });
+}
+bindQuestion('.qIntro','introFeedback','Esatto: il 57,7% è una percentuale di riga.','Controlla quale totale è usato come denominatore.');
+
+function margins(o){
+  const rows=o.map(r=>r.reduce((a,b)=>a+b,0));
+  const cols=[0,1,2].map(j=>o.reduce((s,r)=>s+r[j],0));
+  const n=rows.reduce((a,b)=>a+b,0);
+  return {rows,cols,n};
+}
+function stats(o){
+  const m=margins(o);
+  const expected=o.map((r,i)=>r.map((_,j)=>m.rows[i]*m.cols[j]/m.n));
+  let chi=0;
+  const contributions=o.map((r,i)=>r.map((v,j)=>{
+    const q=(v-expected[i][j])**2/expected[i][j];chi+=q;return q;
+  }));
+  const residuals=o.map((r,i)=>r.map((v,j)=>(v-expected[i][j])/Math.sqrt(expected[i][j])));
+  const df=(o.length-1)*(o[0].length-1);
+  const p=chiSurvival(chi,df);
+  const v=Math.sqrt(chi/(m.n*Math.min(o.length-1,o[0].length-1)));
+  return {m,expected,contributions,residuals,chi,df,p,v};
+}
+function scaledObserved(mult){
+  return observedBase.map(r=>r.map(v=>v*mult));
+}
+function structureData(){
+  const rowTotals=[260,210,130], colTotals=[260,210,130], n=600;
+  if(structureMode==='ind'){
+    return rowTotals.map(r=>colTotals.map(c=>r*c/n));
+  }
+  return [[260,0,0],[0,210,0],[0,0,130]];
+}
+
+function drawStacked(canvas,o){
+  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,L=170,R=35,T=30,B=55;
+  const m=margins(o),barH=70,gap=43;
+  ctx.clearRect(0,0,w,h);
+  for(let k=0;k<=5;k++){
+    const x=L+k*(w-L-R)/5;
+    ctx.strokeStyle='#e1e7ee';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,T);ctx.lineTo(x,h-B);ctx.stroke();
+    ctx.fillStyle='#667085';ctx.font='12px Arial';ctx.fillText((k*20)+'%',x-10,h-B+22);
+  }
+  o.forEach((r,i)=>{
+    const y=T+i*(barH+gap)+25;let start=L;
+    ctx.fillStyle='#344054';ctx.font='bold 14px Arial';ctx.fillText(rowNames[i],10,y+40);
+    r.forEach((v,j)=>{
+      const p=v/m.rows[i],seg=p*(w-L-R);
+      ctx.fillStyle=colors[j];ctx.fillRect(start,y,seg,barH);
+      if(seg>62){
+        ctx.fillStyle=j===2?'#475467':'#fff';ctx.font='bold 13px Arial';
+        ctx.fillText(fmt(p*100,0)+'%',start+seg/2-16,y+40);
+      }
+      start+=seg;
+    });
+  });
+}
+
+function renderIntro(){
+  const o=observedBase,m=margins(o);
+  let h='<thead><tr><th>Campagna</th>'+colNames.map(c=>'<th>'+c+'</th>').join('')+'<th>Totale</th></tr></thead><tbody>';
+  o.forEach((r,i)=>{
+    h+='<tr><th>'+rowNames[i]+'</th>';
+    r.forEach((v,j)=>{
+      let value;
+      if(introMode==='count')value=fmt(v,0);
+      if(introMode==='row')value=fmt(100*v/m.rows[i],1)+'%';
+      if(introMode==='col')value=fmt(100*v/m.cols[j],1)+'%';
+      h+='<td>'+value+'</td>';
+    });
+    h+='<th>'+(introMode==='count'?fmt(m.rows[i],0):introMode==='row'?'100,0%':fmt(100*m.rows[i]/m.n,1)+'%')+'</th></tr>';
+  });
+  h+='<tr><th>Totale</th>';
+  m.cols.forEach(v=>h+='<th>'+(introMode==='count'?fmt(v,0):introMode==='col'?'100,0%':fmt(100*v/m.n,1)+'%')+'</th>');
+  h+='<th>'+(introMode==='count'?fmt(m.n,0):'100,0%')+'</th></tr></tbody>';
+  $('introTable').innerHTML=h;
+  drawStacked($('introCanvas'),o);
+}
+document.querySelectorAll('.introMode').forEach(b=>b.onclick=()=>{
+  introMode=b.dataset.mode;document.querySelectorAll('.introMode').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderIntro();
+});
+
+function renderStructure(){
+  const o=structureData(),s=stats(o),m=margins(o);
+  let h='<thead><tr><th>Campagna</th>'+colNames.map(c=>'<th>'+c+'</th>').join('')+'<th>Totale</th></tr></thead><tbody>';
+  o.forEach((r,i)=>{
+    h+='<tr><th>'+rowNames[i]+'</th>'+r.map(v=>'<td>'+fmt(v,1)+'</td>').join('')+'<th>'+fmt(m.rows[i],0)+'</th></tr>';
+  });
+  h+='<tr><th>Totale</th>'+m.cols.map(v=>'<th>'+fmt(v,0)+'</th>').join('')+'<th>'+fmt(m.n,0)+'</th></tr></tbody>';
+  $('structureTable').innerHTML=h;drawStacked($('structureCanvas'),o);
+  $('structureA').textContent=fmt(100*o[0][0]/m.rows[0],1)+'%';
+  $('structureB').textContent=fmt(100*o[1][1]/m.rows[1],1)+'%';
+  $('structureC').textContent=fmt(100*o[2][2]/m.rows[2],1)+'%';
+  $('structureV').textContent=fmt(s.v,3);
+  $('structureNote').innerHTML=structureMode==='ind'
+   ? '<strong>Indipendenza:</strong> ogni campagna presenta la stessa distribuzione marginale degli esiti: 43,3% Premium, 35,0% Standard e 21,7% Nessun acquisto.'
+   : '<strong>Massima connessione:</strong> ogni campagna è associata a un solo esito. La tabella è perfettamente diagonale e V di Cramér è pari a 1, pur con gruppi di diversa numerosità.';
+}
+document.querySelectorAll('.structureBtn').forEach(b=>b.onclick=()=>{
+  structureMode=b.dataset.mode;document.querySelectorAll('.structureBtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderStructure();
+});
+
+function renderMatrix(){
+  const o=observedBase,s=stats(o),m=s.m;
+  const diff=o.map((r,i)=>r.map((v,j)=>v-s.expected[i][j]));
+  const source={obs:o,exp:s.expected,diff:diff,contrib:s.contributions}[matrixMode];
+  let h='<thead><tr><th>Campagna</th>'+colNames.map(c=>'<th>'+c+'</th>').join('')+'<th>Totale</th></tr></thead><tbody>';
+  source.forEach((r,i)=>{
+    h+='<tr><th>'+rowNames[i]+'</th>';
+    r.forEach((v,j)=>{
+      const cls=selectedCell[0]===i&&selectedCell[1]===j?'clickable selected':'clickable';
+      h+='<td class="'+cls+'" data-r="'+i+'" data-c="'+j+'">'+fmt(v,matrixMode==='obs'?0:2)+'</td>';
+    });
+    h+='<td>'+(matrixMode==='obs'?fmt(m.rows[i],0):'—')+'</td></tr>';
+  });
+  h+='<tr><th>Totale</th>'+m.cols.map(v=>'<th>'+(matrixMode==='obs'?fmt(v,0):'—')+'</th>').join('')+'<th>'+(matrixMode==='obs'?fmt(m.n,0):'—')+'</th></tr></tbody>';
+  $('matrixTable').innerHTML=h;
+  document.querySelectorAll('#matrixTable td.clickable').forEach(td=>td.onclick=()=>{
+    selectedCell=[+td.dataset.r,+td.dataset.c];renderMatrix();
+  });
+  updateSelectedCell();
+}
+function updateSelectedCell(){
+  const o=observedBase,s=stats(o),i=selectedCell[0],j=selectedCell[1];
+  const E=s.expected[i][j],O=o[i][j],D=O-E,Q=s.contributions[i][j];
+  $('cellTitle').textContent=rowNames[i]+' × '+colNames[j];
+  $('expectedFormula').textContent='E=('+fmt(s.m.rows[i],0)+'×'+fmt(s.m.cols[j],0)+')/'+fmt(s.m.n,0)+'='+fmt(E,2);
+  $('cellO').textContent=fmt(O,0);$('cellE').textContent=fmt(E,2);$('cellD').textContent=fmt(D,2);$('cellQ').textContent=fmt(Q,2);
+}
+document.querySelectorAll('.matrixMode').forEach(b=>b.onclick=()=>{
+  matrixMode=b.dataset.mode;document.querySelectorAll('.matrixMode').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderMatrix();
+});
+
+function drawContributions(){
+  const s=stats(observedBase),vals=s.contributions.flat(),labels=[];
+  rowNames.forEach((r,i)=>colNames.forEach((c,j)=>labels.push((i+1)+','+(j+1))));
+  const canvas=$('contributionCanvas'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,L=62,R=25,T=25,B=70;
+  const max=Math.max(...vals)*1.12,bw=(w-L-R)/vals.length*.62;
+  ctx.clearRect(0,0,w,h);
+  for(let k=0;k<=4;k++){
+    const y=T+k*(h-T-B)/4,v=max*(1-k/4);
+    ctx.strokeStyle='#e1e7ee';ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();
+    ctx.fillStyle='#667085';ctx.font='12px Arial';ctx.fillText(fmt(v,1),12,y+4);
+  }
+  ctx.strokeStyle='#344054';ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.lineTo(w-R,h-B);ctx.stroke();
+  vals.forEach((v,i)=>{
+    const x=L+(i+.5)*(w-L-R)/vals.length-bw/2,bar=v/max*(h-T-B);
+    ctx.fillStyle=colors[i%3];ctx.fillRect(x,h-B-bar,bw,bar);
+    ctx.fillStyle='#344054';ctx.font='12px Arial';ctx.fillText(labels[i],x+bw/2-9,h-B+20);
+    ctx.fillText(fmt(v,1),x+bw/2-11,h-B-bar-7);
+  });
+}
+function renderChiCalculation(){
+  const s=stats(observedBase),terms=s.contributions.flat().map(v=>fmt(v,2));
+  $('chiSum').innerHTML='χ² = '+terms.join(' + ')+'<br><strong>= '+fmt(s.chi,2)+'</strong>';
+  $('chiValue').textContent=fmt(s.chi,2);$('chiP').textContent=s.p<.001?'<0,001':fmt(s.p,3);
+  drawContributions();
+}
+
+function renderResiduals(){
+  const s=stats(observedBase);
+  let h='<thead><tr><th>Campagna</th>'+colNames.map(c=>'<th>'+c+'</th>').join('')+'</tr></thead><tbody>';
+  s.residuals.forEach((r,i)=>{
+    h+='<tr><th>'+rowNames[i]+'</th>';
+    r.forEach(v=>{
+      const cls=v>.5?'positive':v<-.5?'negative':'neutral';
+      h+='<td class="'+cls+'">'+fmt(v,2)+'</td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody>';$('residualTable').innerHTML=h;
+}
+
+/* Funzioni della distribuzione chi-quadrato */
+function logGamma(z){
+  const c=[676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.984369578019571e-6,1.5056327351493116e-7];
+  if(z<.5)return Math.log(Math.PI)-Math.log(Math.sin(Math.PI*z))-logGamma(1-z);
+  z-=1;let x=.9999999999998099;
+  for(let i=0;i<c.length;i++)x+=c[i]/(z+i+1);
+  const t=z+c.length-.5;return .5*Math.log(2*Math.PI)+(z+.5)*Math.log(t)-t+Math.log(x);
+}
+function gammaP(a,x){
+  if(x<=0)return 0;
+  if(x<a+1){
+    let sum=1/a,del=sum,ap=a;
+    for(let n=1;n<200;n++){ap++;del*=x/ap;sum+=del;if(Math.abs(del)<Math.abs(sum)*1e-14)break}
+    return sum*Math.exp(-x+a*Math.log(x)-logGamma(a));
+  }
+  let b=x+1-a,c=1/1e-30,d=1/b,h=d;
+  for(let i=1;i<200;i++){
+    const an=-i*(i-a);b+=2;d=an*d+b;if(Math.abs(d)<1e-30)d=1e-30;c=b+an/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;
+    const del=d*c;h*=del;if(Math.abs(del-1)<1e-14)break;
+  }
+  return 1-Math.exp(-x+a*Math.log(x)-logGamma(a))*h;
+}
+function chiSurvival(x,df){return Math.max(0,1-gammaP(df/2,x/2))}
+function chiDensity(x,df){
+  if(x<=0)return 0;
+  return Math.exp((df/2-1)*Math.log(x)-x/2-(df/2)*Math.log(2)-logGamma(df/2));
+}
+function chiCritical(alpha,df){
+  let lo=0,hi=1;while(chiSurvival(hi,df)>alpha&&hi<1e6)hi*=2;
+  for(let i=0;i<80;i++){const mid=(lo+hi)/2;if(chiSurvival(mid,df)>alpha)lo=mid;else hi=mid}
+  return (lo+hi)/2;
+}
+function drawDistribution(){
+  const s=stats(observedBase),alpha=+$('alpha').value,crit=chiCritical(alpha,s.df);
+  const canvas=$('distributionCanvas'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,L=65,R=25,T=25,B=55;
+  const xmax=Math.max(42,crit*1.7,s.chi*1.08),ymax=.19;
+  const X=x=>L+x/xmax*(w-L-R),Y=y=>T+(ymax-y)/ymax*(h-T-B);
+  ctx.clearRect(0,0,w,h);
+  for(let k=0;k<=6;k++){const x=L+k*(w-L-R)/6;ctx.strokeStyle='#e1e7ee';ctx.beginPath();ctx.moveTo(x,T);ctx.lineTo(x,h-B);ctx.stroke();ctx.fillStyle='#667085';ctx.font='12px Arial';ctx.fillText(fmt(k*xmax/6,0),x-8,h-B+22)}
+  ctx.strokeStyle='#344054';ctx.beginPath();ctx.moveTo(L,h-B);ctx.lineTo(w-R,h-B);ctx.stroke();
+  ctx.fillStyle='rgba(180,35,24,.18)';ctx.beginPath();ctx.moveTo(X(s.chi),h-B);
+  for(let i=0;i<=300;i++){const x=s.chi+(xmax-s.chi)*i/300;ctx.lineTo(X(x),Y(chiDensity(x,s.df)))}
+  ctx.lineTo(w-R,h-B);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#0260b5';ctx.lineWidth=3;ctx.beginPath();
+  for(let i=1;i<=600;i++){const x=i*xmax/600,y=chiDensity(x,s.df);if(i===1)ctx.moveTo(X(x),Y(y));else ctx.lineTo(X(x),Y(y))}
+  ctx.stroke();
+  ctx.strokeStyle='#a75c00';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X(crit),T);ctx.lineTo(X(crit),h-B);ctx.stroke();
+  ctx.strokeStyle='#b42318';ctx.beginPath();ctx.moveTo(X(s.chi),T);ctx.lineTo(X(s.chi),h-B);ctx.stroke();
+  ctx.fillStyle='#a75c00';ctx.font='bold 13px Arial';ctx.fillText('critico',X(crit)+5,T+16);
+  ctx.fillStyle='#b42318';ctx.fillText('osservato',X(s.chi)-72,T+36);
+  $('distObs').textContent=fmt(s.chi,2);$('distCrit').textContent=fmt(crit,2);$('distP').textContent=s.p<.001?'<0,001':fmt(s.p,3);
+}
+$('alpha').oninput=drawDistribution;
+
+function drawStrength(current){
+  const canvas=$('strengthCanvas'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,L=72,R=72,T=30,B=62;
+  const data=[];
+  for(let m=1;m<=10;m++){const s=stats(scaledObserved(m));data.push({m,n:s.m.n,chi:s.chi,v:s.v})}
+  const maxChi=Math.max(...data.map(d=>d.chi))*1.08,maxV=.24;
+  const X=m=>L+(m-1)/9*(w-L-R),Yc=v=>T+(maxChi-v)/maxChi*(h-T-B),Yv=v=>T+(maxV-v)/maxV*(h-T-B);
+  ctx.clearRect(0,0,w,h);
+  for(let k=0;k<=5;k++){
+    const y=T+k*(h-T-B)/5;
+    ctx.strokeStyle='#e1e7ee';ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();
+    ctx.fillStyle='#667085';ctx.font='12px Arial';ctx.fillText(fmt(maxChi*(1-k/5),0),18,y+4);ctx.fillText(fmt(maxV*(1-k/5),2),w-R+10,y+4);
+  }
+  ctx.strokeStyle='#344054';ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.lineTo(w-R,h-B);ctx.lineTo(w-R,T);ctx.stroke();
+  data.forEach((d,i)=>{if(i===0||i===2||i===4||i===6||i===8||i===9){ctx.fillStyle='#667085';ctx.fillText(String(d.n),X(d.m)-14,h-B+22)}});
+  ctx.strokeStyle='#0260b5';ctx.lineWidth=3;ctx.beginPath();data.forEach((d,i)=>i?ctx.lineTo(X(d.m),Yc(d.chi)):ctx.moveTo(X(d.m),Yc(d.chi)));ctx.stroke();
+  ctx.strokeStyle='#a75c00';ctx.beginPath();data.forEach((d,i)=>i?ctx.lineTo(X(d.m),Yv(d.v)):ctx.moveTo(X(d.m),Yv(d.v)));ctx.stroke();
+  const d=data[current-1],x=X(current);
+  ctx.strokeStyle='rgba(52,64,84,.4)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,T);ctx.lineTo(x,h-B);ctx.stroke();
+  ctx.fillStyle='#0260b5';ctx.beginPath();ctx.arc(x,Yc(d.chi),7,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#a75c00';ctx.beginPath();ctx.arc(x,Yv(d.v),7,0,Math.PI*2);ctx.fill();
+}
+function updateStrength(){
+  const m=+$('multiplier').value,s=stats(scaledObserved(m));
+  $('multLabel').textContent=m+'×';$('strengthN').textContent=s.m.n;$('strengthChi').textContent=fmt(s.chi,2);
+  $('strengthP').textContent=s.p<.001?'<0,001':fmt(s.p,3);$('strengthV').textContent=fmt(s.v,3);drawStrength(m);
+}
+$('multiplier').oninput=updateStrength;
+
+/* Quiz */
+const quiz=[
+ ['In una tabella 3 × 3 quante celle interne ci sono?',['9','6','3'],0],
+ ['Sotto indipendenza, P(A∩B) è...',['P(A)P(B)','P(A)+P(B)','sempre zero'],0],
+ ['Come si calcola Eᵢⱼ?',['Totale riga × totale colonna / n','Oᵢⱼ/n','Somma dei margini'],0],
+ ['Che cos’è una contingenza?',['O−E','O/E','E−n'],0],
+ ['Qual è il contributo della cella a χ²?',['(O−E)²/E','O−E','E²/O'],0],
+ ['Quanti gdl ha una tabella 3 × 3?',['4','6','9'],0],
+ ['Il p-value è...',['l’area a destra del valore osservato','il massimo della curva','V di Cramér'],0],
+ ['Un residuo positivo indica...',['più casi del previsto','meno casi del previsto','assenza di margini'],0],
+ ['A parità di percentuali, aumentando n...',['χ² aumenta e V resta uguale','V aumenta sempre','χ² resta uguale'],0],
+ ['Nella massima connessione 3 × 3 diagonale, V vale...',['1','0','3'],0]
+];
+let qi=0,score=0;
+function renderQuiz(){
+  $('quizProgress').style.width=(100*qi/quiz.length)+'%';
+  if(qi===quiz.length){
+    $('quizBox').innerHTML='<div class="card"><div class="card-head">Risultato</div><div class="card-body"><p style="font-size:34px;font-weight:900;color:#014082">'+score+'/10</p></div></div>';
+    $('quizProgress').style.width='100%';return;
+  }
+  const q=quiz[qi];
+  $('quizBox').innerHTML='<div class="card"><div class="card-head">Domanda '+(qi+1)+' di 10</div><div class="card-body"><h3>'+q[0]+'</h3>'+q[1].map((a,i)=>'<button class="choice quizChoice" data-i="'+i+'">'+a+'</button>').join('')+'<div id="quizFeedback" class="feedback"></div></div></div>';
+  document.querySelectorAll('.quizChoice').forEach(b=>b.onclick=()=>{
+    const ok=+b.dataset.i===q[2];document.querySelectorAll('.quizChoice').forEach(x=>x.disabled=true);b.classList.add(ok?'good':'bad');
+    if(!ok)document.querySelectorAll('.quizChoice')[q[2]].classList.add('good');if(ok)score++;
+    $('quizFeedback').className='feedback show '+(ok?'good':'bad');
+    $('quizFeedback').innerHTML=(ok?'Risposta corretta.':'Rivedi il concetto.')+' <button class="btn primary" id="nextQuiz">Continua</button>';
+    $('nextQuiz').onclick=()=>{qi++;renderQuiz()};
+  });
+}
+$('restartQuiz').onclick=()=>{qi=0;score=0;renderQuiz()};
+
+renderIntro();
+renderStructure();
+renderMatrix();
+renderChiCalculation();
+renderResiduals();
+drawDistribution();
+updateStrength();
+renderQuiz();
+</script>
+
+<footer class="salini-copyright" style="margin:26px auto 8px;max-width:1180px;padding:14px 18px;text-align:center;font-size:12px;line-height:1.45;color:#667085;border-top:1px solid #dce5ef;">© Silvia Salini · Materiale didattico. Tutti i diritti riservati.</footer>
+</body>
+</html>

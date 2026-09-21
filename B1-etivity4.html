@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>E-tivity 4 · Indici di eterogeneità</title>
+<style>
+:root{
+  --blue:#014082; --blue2:#0260b5; --light:#e6f2ff; --ink:#222; --muted:#667085;
+  --orange:#9a5b00; --orange2:#fff7ed; --green:#2e7d32; --red:#c0392b; --purple:#6d5bd0;
+  --line:#dde4ee; --soft:#f4f7fb; --card:#ffffff; --teal:#147d8d;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);font-family:Arial,"Helvetica Neue",sans-serif;font-size:16px;color:var(--ink)}
+.wrap{max-width:1080px;margin:30px auto;padding:0 16px 54px}
+.header{border-radius:10px 10px 0 0;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:54px 24px 42px;text-align:center;box-shadow:0 6px 18px rgba(1,64,130,.13)}
+.header .kicker{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.8;margin-bottom:12px;font-weight:700}
+.header h1{font-size:29px;line-height:1.22;margin:0 0 10px;font-weight:800}
+.header p{font-size:18px;line-height:1.5;margin:0;opacity:.95}
+.meta-row{background:#fff;border-left:1px solid var(--line);border-right:1px solid var(--line);padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;color:#43536a;font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #cdd9e8;background:#f8fbff;border-radius:999px;padding:7px 12px;font-weight:700;color:var(--blue)}
+.tabbar{background:#fff;border:1px solid var(--line);border-top:none;display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:2px solid var(--blue)}
+.tabbar::-webkit-scrollbar{display:none}.tab{cursor:pointer;padding:12px 9px;font-size:12.5px;font-weight:700;white-space:nowrap;border:0;border-right:1px solid var(--line);flex:1;text-align:center;color:#697386;background:#fff;border-bottom:3px solid transparent;min-width:130px;transition:.18s}
+.tab:hover{background:#f8fbff;color:var(--blue)}.tab.active{color:var(--blue);background:var(--light);border-bottom:3px solid var(--blue);margin-bottom:-2px}
+.content{background:#fff;border:1px solid var(--line);border-top:none;border-radius:0 0 10px 10px;padding:32px 30px;min-height:580px;box-shadow:0 12px 30px rgba(23,39,64,.08)}
+.section{display:none}.section.active{display:block}
+.card-blue{background:var(--blue);color:#fff;padding:21px;border-radius:10px;margin-bottom:22px}.card-blue h2{margin:0 0 10px;font-size:20px}.card-blue p{margin:0;line-height:1.75}
+.card-intro{background:var(--light);border:1px solid var(--blue);border-radius:10px;padding:20px;margin-bottom:22px}.card-intro h2{font-size:20px;color:var(--blue);margin:0 0 10px}.card-intro p{margin:0;line-height:1.75}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:13px;margin-bottom:22px;overflow:hidden}.card-head{padding:15px 20px;font-weight:800;font-size:18px}.card-head.light{background:var(--light);color:var(--blue)}.card-head.dark{background:var(--blue);color:#fff}.card-body{padding:20px 22px;line-height:1.75}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:820px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.content{padding:24px 17px}.header{padding:40px 18px 34px}.tab{min-width:150px}.wrap{margin-top:14px}}
+.mini-card{background:#f8fbff;border:1px solid #d8e6f5;border-radius:10px;padding:16px;line-height:1.65}.mini-card strong{color:var(--blue)}
+.box-orange{background:var(--orange2);border:2px solid var(--orange);border-radius:13px;padding:20px;margin-bottom:22px}.box-orange h3{font-size:18px;margin:0 0 12px;color:#a85d00}
+.tip{background:#f5f9ff;border-left:5px solid var(--blue);padding:14px 16px;border-radius:0 10px 10px 0;margin:14px 0;line-height:1.7}.warn{background:#fff3e0;border-left:5px solid var(--orange);padding:14px 16px;border-radius:0 10px 10px 0;margin:14px 0;line-height:1.7}.okbox{background:#eef8ef;border-left:5px solid var(--green);padding:14px 16px;border-radius:0 10px 10px 0;margin:14px 0;line-height:1.7}
+.formula{background:#f0f6ff;border:1px solid #c3d9f7;border-radius:10px;padding:14px 16px;text-align:center;color:var(--blue);font-weight:800;margin:14px 0;line-height:1.8}
+.controls{background:#fff9f0;border:2px solid var(--orange);border-radius:13px;padding:18px;margin-bottom:18px}.control{margin:0 0 16px}.control:last-child{margin-bottom:0}.control label{display:block;font-weight:800;margin-bottom:7px;color:#4a4a4a}.value{color:#a85d00;font-weight:800}
+input[type=range]{width:100%;accent-color:var(--orange);cursor:pointer} input[type=text],input[type=number],select,textarea{font-family:inherit;font-size:15px;border:1.5px solid #cbd5e1;border-radius:8px;padding:10px 12px;background:#fff;width:100%} textarea{min-height:120px;resize:vertical;line-height:1.55}
+.btn-row{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap}.btn-group{display:flex;gap:10px;flex-wrap:wrap}.btn{padding:11px 21px;border-radius:9px;border:none;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#e0e8f4;color:var(--blue)}.btn.orange{background:var(--orange);color:#fff}.btn.ghost{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+.canvas-card{background:#fafafa;border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin-bottom:20px;overflow:hidden}.canvas-card h4{margin:0 0 12px;font-size:16px}.chart{width:100%;height:auto;border:1px solid #ddd;border-radius:8px;background:#fff;display:block}
+.readout{background:#f8fbff;border:1px solid #d3e2f2;border-radius:10px;padding:13px 16px;margin-top:12px;font-size:14px;line-height:1.7;color:#344054}.readout strong{color:var(--blue)}
+.table-wrap{overflow-x:auto}.data{width:100%;border-collapse:collapse;font-size:14px}.data th,.data td{padding:10px 12px;border:1px solid #e5e7eb;text-align:center}.data th{background:var(--light);color:var(--blue)}.data td.left,.data th.left{text-align:left}.data tr.highlight{background:#fff9f0}.data tr.good{background:#eef8ef}.data input{min-width:78px;text-align:right;padding:8px}
+.quiz-option{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;line-height:1.5;transition:.15s}.quiz-option:hover{background:#f7fbff;border-color:#bdd7f2}.quiz-option.correct{border-color:var(--green);background:#e8f5e9}.quiz-option.wrong{border-color:var(--red);background:#ffebee}
+.feedback{display:none;margin-top:10px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.65}.feedback.ok{display:block;background:#e8f5e9;border:1px solid var(--green);color:#1b5e20}.feedback.err{display:block;background:#ffebee;border:1px solid var(--red);color:#8a1f16}.feedback.info{display:block;background:#f0f6ff;border:1px solid #c3d9f7;color:#123c69}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.kpi{background:#f8fbff;border:1px solid #d8e6f5;border-radius:11px;padding:13px;text-align:center}.kpi .n{font-size:21px;font-weight:900;color:var(--blue)}.kpi .l{font-size:12px;color:#667085;margin-top:4px}@media(max-width:700px){.kpi-row{grid-template-columns:1fr 1fr}}
+.gauge{height:18px;background:#edf2f7;border-radius:999px;overflow:hidden;margin:10px 0}.gauge>div{height:100%;width:0;background:linear-gradient(90deg,var(--orange),var(--green));transition:.25s}.badge{display:inline-block;border-radius:999px;padding:5px 10px;background:#eef6ff;color:var(--blue);font-size:12px;font-weight:800;margin:2px}.source-card{border:1px solid #d7e4f1;background:#fbfdff;border-radius:12px;padding:16px}.source-card a{color:var(--blue);font-weight:800;text-decoration:none}.source-card a:hover{text-decoration:underline}
+.app-card{border:1px solid #e3e8ef;border-radius:12px;padding:18px;background:#fff;line-height:1.65}.app-card h3{margin:0 0 8px;color:var(--blue);font-size:18px}.app-card .icon{font-size:28px;margin-bottom:8px}.small{font-size:13px;color:#667085;line-height:1.6}.center{text-align:center}.hidden{display:none!important}.section-number{display:inline-block;font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:8px}
+footer{font-size:12px;color:#667085;text-align:center;margin-top:20px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"],["$","$"]],displayMath:[["\\[","\\]"]]}};</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="kicker">Statistica per l’Azienda · Blocco 1</div>
+    <h1>E-tivity 4 · Indici di eterogeneità</h1>
+    <p>Gini e Shannon: misurare quanto una distribuzione categoriale è concentrata in poche modalità o diversificata tra molte categorie.</p>
+  </div>
+  <div class="meta-row">
+    <span class="pill">Durata stimata: 60 minuti</span>
+    <span class="pill">Tabella modificabile</span>
+    <span class="pill">Scenari aziendali</span>
+    <span class="pill">Quiz finale</span>
+  </div>
+  <div class="tabbar" id="tabbar">
+    <button class="tab active" data-tab="1">1 · Che cos’è</button>
+    <button class="tab" data-tab="2">2 · Gini e Shannon</button>
+    <button class="tab" data-tab="3">3 · Storia</button>
+    <button class="tab" data-tab="4">4 · Simulatore</button>
+    <button class="tab" data-tab="5">5 · Esperimenti</button>
+    <button class="tab" data-tab="6">6 · Applicazioni</button>
+    <button class="tab" data-tab="7">7 · Caso aziendale</button>
+    <button class="tab" data-tab="8">8 · Quiz</button>
+  </div>
+
+  <div class="content">
+<section class="section active" id="tab1">
+  <div class="card-blue"><h2>La variabilità esiste anche senza numeri</h2><p>Per una variabile qualitativa non possiamo calcolare distanze tra le modalità. Possiamo però osservare come le unità si distribuiscono tra le categorie. Se tutte appartengono alla stessa categoria, la distribuzione è omogenea; se sono ripartite in modo equilibrato, è eterogenea.</p></div>
+  <div class="card-intro"><span class="section-number">Sezione 1</span><h2>Tre organizzazioni, cento persone, tre distribuzioni</h2><p>Immagina che 100 dipendenti siano distribuiti tra cinque aree aziendali. Il totale è sempre lo stesso, ma la composizione cambia radicalmente.</p></div>
+  <div class="table-wrap"><table class="data"><thead><tr><th>Scenario</th><th>Area A</th><th>Area B</th><th>Area C</th><th>Area D</th><th>Area E</th></tr></thead><tbody><tr><td class="left"><strong>Concentrato</strong></td><td>100</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td class="left"><strong>Intermedio</strong></td><td>50</td><td>25</td><td>15</td><td>10</td><td>0</td></tr><tr class="good"><td class="left"><strong>Equilibrato</strong></td><td>20</td><td>20</td><td>20</td><td>20</td><td>20</td></tr></tbody></table></div>
+  <div class="grid3" style="margin-top:18px">
+    <div class="mini-card"><strong>Minima eterogeneità</strong><br/>Una sola categoria contiene tutte le unità.</div>
+    <div class="mini-card"><strong>Eterogeneità intermedia</strong><br/>Più categorie sono presenti, ma alcune dominano.</div>
+    <div class="mini-card"><strong>Massima eterogeneità</strong><br/>Le frequenze relative sono tutte uguali a \(1/k\).</div>
+  </div>
+  <div class="box-orange"><h3>Prima previsione</h3><p>Quale scenario dovrebbe avere indice pari a 0? Quale dovrebbe raggiungere il massimo? Tieni a mente la tua risposta e verificala nelle sezioni successive.</p></div>
+  <div class="tip"><strong>Idea chiave.</strong> L’eterogeneità non dipende dal nome delle categorie, ma da come le frequenze sono distribuite tra esse.</div>
+  <div class="btn-row"><span></span><button class="btn primary" data-to="2">Scopri gli indici →</button></div>
+</section>
+
+<section class="section" id="tab2">
+  <div class="card-intro"><span class="section-number">Sezione 2</span><h2>Due modi di misurare la diversità</h2><p>Gli indici di Gini e Shannon lavorano sulle frequenze relative \(f_i\). Entrambi valgono 0 quando una categoria assorbe tutta la distribuzione e raggiungono il massimo quando le categorie sono equiprobabili.</p></div>
+  <div class="grid2">
+    <div class="card"><div class="card-head light">Indice di eterogeneità di Gini</div><div class="card-body">
+      <div class="formula">\[H_G=1-\sum_{i=1}^{k}f_i^2\]</div>
+      <p>La somma dei quadrati cresce quando poche categorie dominano. Sottraendola da 1 otteniamo una misura delle differenze tra categorie.</p>
+      <p><strong>Minimo:</strong> 0. <strong>Massimo:</strong> \((k-1)/k\).</p>
+      <div class="formula">\[H_{G,norm}=\frac{H_G}{(k-1)/k}\]</div>
+    </div></div>
+    <div class="card"><div class="card-head light">Indice di Shannon o entropia</div><div class="card-body">
+      <div class="formula">\[H_S=-\sum_{i=1}^{k}f_i\log(f_i)\]</div>
+      <p>Misura l’incertezza associata alla categoria di una unità scelta a caso. Se tutte le categorie sono ugualmente probabili, l’incertezza è massima.</p>
+      <p><strong>Minimo:</strong> 0. <strong>Massimo:</strong> \(\log(k)\).</p>
+      <div class="formula">\[H_{S,norm}=\frac{-\sum f_i\log(f_i)}{\log(k)}\]</div>
+    </div></div>
+  </div>
+  <div class="warn"><strong>La base del logaritmo.</strong> Il valore grezzo di Shannon cambia usando logaritmo naturale, base 2 o base 10. L’indice normalizzato non cambia, purché numeratore e denominatore utilizzino la stessa base.</div>
+  <div class="card"><div class="card-head dark">Perché normalizzare?</div><div class="card-body"><p>Il massimo teorico dipende dal numero di categorie. Con 2 categorie il Gini grezzo può arrivare soltanto a 0,5; con 5 categorie arriva a 0,8. La normalizzazione porta entrambi gli indici nell’intervallo 0–1 e facilita il confronto.</p>
+  <div class="table-wrap"><table class="data"><thead><tr><th>Numero categorie</th><th>Massimo Gini grezzo</th><th>Massimo Shannon grezzo</th><th>Massimo normalizzato</th></tr></thead><tbody><tr><td>2</td><td>0,500</td><td>log(2)</td><td>1</td></tr><tr><td>5</td><td>0,800</td><td>log(5)</td><td>1</td></tr><tr><td>10</td><td>0,900</td><td>log(10)</td><td>1</td></tr></tbody></table></div></div></div>
+  <div class="btn-row"><button class="btn secondary" data-to="1">← Indietro</button><button class="btn primary" data-to="3">Conosci gli autori →</button></div>
+</section>
+
+<section class="section" id="tab3">
+  <div class="card-intro"><span class="section-number">Sezione 3</span><h2>Corrado Gini, Claude Shannon e la storia degli indici</h2><p>I due indici nascono in contesti scientifici differenti: la statistica della variabilità e della mutabilità, da un lato; la teoria matematica della comunicazione, dall’altro.</p></div>
+  <div class="grid2">
+    <div class="card"><div class="card-head light">Corrado Gini (1884–1965)</div><div class="card-body">
+      <p>Statistico, demografo e sociologo italiano, nato a <strong>Motta di Livenza</strong>, nel territorio trevigiano. Studiò variabilità, mutabilità e concentrazione, contribuendo in modo decisivo alla costruzione di indici sintetici per descrivere distribuzioni.</p>
+      <p><strong>Opere di riferimento:</strong></p>
+      <p><em>Variabilità e mutabilità</em> (1912)<br/><em>Sulla misura della concentrazione e della variabilità dei caratteri</em> (1914)</p>
+    </div></div>
+    <div class="card"><div class="card-head light">Claude E. Shannon (1916–2001)</div><div class="card-body">
+      <p>Matematico e ingegnere statunitense, considerato il fondatore della teoria dell’informazione. Nel 1948 pubblicò <em>A Mathematical Theory of Communication</em>, mostrando che l’informazione e l’incertezza potevano essere quantificate.</p>
+      <p>L’entropia di Shannon è oggi utilizzata ben oltre le telecomunicazioni: ecologia, linguistica, informatica, machine learning, analisi delle reti e molti altri campi.</p>
+    </div></div>
+  </div>
+  <div class="source-card">
+    <strong>StatisticAll – Festival della Statistica e della Demografia.</strong><br/>
+    Da oltre dieci anni Treviso ospita un festival dedicato alla divulgazione della statistica, della demografia e della cultura dei dati. La manifestazione è organizzata congiuntamente dall’<strong>Associazione Corrado Gini</strong>, dalla <strong>Società Italiana di Statistica (SIS)</strong> e dall’<strong>Istituto nazionale di statistica (ISTAT)</strong>. La sede trevigiana richiama il legame con il territorio nel quale Corrado Gini nacque.
+  </div>
+  <div class="btn-row"><button class="btn secondary" data-to="2">← Indietro</button><button class="btn primary" data-to="4">Apri il simulatore →</button></div>
+</section>
+
+<section class="section" id="tab4">
+  <div class="card-intro"><span class="section-number">Sezione 4</span><h2>Simulatore: modifica le frequenze</h2><p>Inserisci le frequenze assolute nella tabella. Il totale, le frequenze relative, i contributi ai due indici, i grafici e gli indici normalizzati vengono aggiornati automaticamente.</p></div>
+  <div class="controls">
+    <div class="control"><label>Scenario preimpostato</label><select id="scenarioSelect"><option value="balanced">Massima eterogeneità: 20, 20, 20, 20, 20</option><option value="concentrated">Minima eterogeneità: 100, 0, 0, 0, 0</option><option value="dominant">Una categoria dominante: 70, 10, 10, 5, 5</option><option value="gradual">Distribuzione graduale: 40, 25, 15, 12, 8</option><option value="two">Due categorie uguali: 50, 50, 0, 0, 0</option><option value="rare">Categoria rara: 49, 25, 25, 1, 0</option><option value="random">Genera distribuzione casuale</option></select></div>
+    <div class="btn-group"><button class="btn secondary" id="applyScenario">Applica scenario</button><button class="btn orange" id="equalize">Rendi uguali</button><button class="btn ghost" id="resetSim">Ripristina</button></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="table-wrap"><table class="data" id="simTable"><thead><tr><th>Categoria</th><th>nᵢ</th><th>fᵢ</th><th>fᵢ²</th><th>−fᵢ log(fᵢ)</th></tr></thead><tbody></tbody><tfoot><tr class="highlight"><th>Totale</th><th id="sumN">—</th><th id="sumF">—</th><th id="sumSq">—</th><th id="sumSh">—</th></tr></tfoot></table></div>
+    </div>
+    <div class="canvas-card"><h4>Distribuzione delle frequenze relative</h4><canvas class="chart" id="simCanvas" width="500" height="390"></canvas></div>
+  </div>
+  <div class="kpi-row"><div class="kpi"><div class="n" id="gRaw">—</div><div class="l">Gini grezzo</div></div><div class="kpi"><div class="n" id="gNorm">—</div><div class="l">Gini normalizzato</div></div><div class="kpi"><div class="n" id="sRaw">—</div><div class="l">Shannon grezzo</div></div><div class="kpi"><div class="n" id="sNorm">—</div><div class="l">Shannon normalizzato</div></div></div>
+  <div class="grid2"><div><strong>Gini normalizzato</strong><div class="gauge"><div id="gGauge"></div></div></div><div><strong>Shannon normalizzato</strong><div class="gauge"><div id="sGauge"></div></div></div></div>
+  <div class="readout" id="simReadout"></div>
+  <div class="tip"><strong>Prova.</strong> Aumenta una categoria e riduci le altre. Poi distribuisci le stesse unità in modo più uniforme. Osserva come entrambi gli indici reagiscono.</div>
+  <div class="btn-row"><button class="btn secondary" data-to="3">← Indietro</button><button class="btn primary" data-to="5">Esegui gli esperimenti →</button></div>
+</section>
+
+<section class="section" id="tab5">
+  <div class="card-intro"><span class="section-number">Sezione 5</span><h2>Esperimenti guidati</h2><p>Gli indici aumentano quando le unità vengono distribuite in modo più uniforme. Ma Gini e Shannon non reagiscono in modo identico a tutte le modifiche.</p></div>
+  <div class="card"><div class="card-head dark">Esperimento A · Trasferisci dalla categoria dominante</div><div class="card-body">
+    <p>Partenza: 80, 5, 5, 5, 5. Sposta progressivamente unità dalla prima categoria alle altre quattro.</p>
+    <div class="controls"><div class="control"><label>Unità trasferite dalla categoria A: <span class="value" id="transferVal">0</span></label><input type="range" id="transferSlider" min="0" max="60" step="4" value="0"/></div></div>
+    <div class="table-wrap"><table class="data"><thead><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>Gini norm.</th><th>Shannon norm.</th></tr></thead><tbody><tr><td id="ta">80</td><td id="tb">5</td><td id="tc">5</td><td id="td">5</td><td id="te">5</td><td id="tg">—</td><td id="ts">—</td></tr></tbody></table></div>
+  </div></div>
+  <div class="grid2">
+    <div class="card"><div class="card-head light">Esperimento B · Dividi una categoria</div><div class="card-body"><p>Confronta 50, 30, 20 con 50, 30, 10, 10. Nessuna unità è stata aggiunta: è cambiata la classificazione.</p><div id="splitResult" class="readout"></div><div class="warn">La misura dipende anche da come definiamo le categorie. Una classificazione più dettagliata può aumentare l’eterogeneità osservata.</div></div></div>
+    <div class="card"><div class="card-head light">Esperimento C · Aggiungi una categoria rara</div><div class="card-body"><p>Confronta 50, 25, 25 con 49, 25, 25, 1. Shannon tende a registrare con particolare sensibilità la comparsa di categorie rare.</p><div id="rareResult" class="readout"></div></div></div>
+  </div>
+  <div class="card"><div class="card-head light">Gini e Shannon: stessa graduatoria, sensibilità diversa</div><div class="card-body"><div class="table-wrap"><table class="data"><thead><tr><th>Indice</th><th>Meccanismo</th><th>Lettura intuitiva</th></tr></thead><tbody><tr><td>Gini</td><td>Quadrati delle frequenze</td><td>Reagisce fortemente alla dominanza delle categorie più grandi.</td></tr><tr><td>Shannon</td><td>Termini −f log(f)</td><td>Registra anche la presenza e la rarità delle categorie piccole.</td></tr><tr><td>Entrambi</td><td>Intera distribuzione</td><td>Minimo con una categoria; massimo con frequenze uguali.</td></tr></tbody></table></div></div></div>
+  <div class="btn-row"><button class="btn secondary" data-to="4">← Indietro</button><button class="btn primary" data-to="6">Scopri le applicazioni →</button></div>
+</section>
+
+<section class="section" id="tab6">
+  <div class="card-intro"><span class="section-number">Sezione 6</span><h2>Dove si usano gli indici di eterogeneità?</h2><p>La stessa idea matematica — descrivere quanta varietà e quanto equilibrio esistono tra categorie — ricorre in discipline molto diverse.</p></div>
+  <div class="grid3">
+    <div class="app-card"><div class="icon">🌿</div><h3>Ecologia</h3><p>Biodiversità di specie, equilibrio tra abbondanze, confronto tra habitat e comunità ecologiche.</p></div>
+    <div class="app-card"><div class="icon">🛒</div><h3>Marketing</h3><p>Diversificazione dei canali, varietà del portafoglio clienti, composizione delle categorie acquistate.</p></div>
+    <div class="app-card"><div class="icon">👥</div><h3>Risorse umane</h3><p>Distribuzione per competenze, funzioni, profili professionali o percorsi formativi.</p></div>
+    <div class="app-card"><div class="icon">🏭</div><h3>Supply chain</h3><p>Dipendenza da fornitori, paesi o materiali; valutazione della diversificazione operativa.</p></div>
+    <div class="app-card"><div class="icon">🌳</div><h3>Machine learning</h3><p>Gini impurity ed entropia sono criteri usati negli alberi di classificazione per rendere i nodi più “puri”.</p></div>
+    <div class="app-card"><div class="icon">💬</div><h3>Linguistica e informazione</h3><p>Varietà lessicale, distribuzione dei simboli, prevedibilità di sequenze e compressione dei messaggi.</p></div>
+  </div>
+  <div class="warn"><strong>Un indice descrive, non giudica.</strong> Un’elevata eterogeneità della composizione del personale non implica automaticamente inclusione, equità o qualità organizzativa. Occorrono domande, indicatori e informazioni ulteriori.</div>
+  <div class="card"><div class="card-head dark">Cenno alle misure di concentrazione</div><div class="card-body"><p>Corrado Gini sviluppò anche misure di concentrazione per quantità trasferibili, come reddito e ricchezza, oggi spesso associate alla curva di Lorenz. Esse non coincidono con l’indice categoriale studiato qui e vengono soltanto richiamate.</p></div></div>
+  <div class="btn-row"><button class="btn secondary" data-to="5">← Indietro</button><button class="btn primary" data-to="7">Affronta il caso aziendale →</button></div>
+</section>
+
+<section class="section" id="tab7">
+  <div class="card-intro"><span class="section-number">Sezione 7</span><h2>Sei il responsabile della supply chain</h2><p>Tre imprese acquistano lo stesso componente da quattro fornitori. Le percentuali rappresentano le quote degli ordini. Quale impresa è più diversificata? Quale è più vulnerabile alla perdita del fornitore principale?</p></div>
+  <div class="table-wrap"><table class="data"><thead><tr><th>Impresa</th><th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>Gini norm.</th><th>Shannon norm.</th></tr></thead><tbody id="companyRows"></tbody></table></div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="canvas-card"><h4>Quote dei fornitori</h4><canvas class="chart" id="companyCanvas" width="500" height="390"></canvas></div>
+    <div>
+      <div class="controls"><div class="control"><label>Impresa visualizzata</label><select id="companySelect"><option value="Alfa">Alfa</option><option value="Beta">Beta</option><option value="Gamma">Gamma</option></select></div></div>
+      <div class="readout" id="companyReadout"></div>
+      <div class="box-orange"><h3>Consegna</h3><p>Scrivi una raccomandazione di 120–180 parole. Indica quale impresa è più diversificata, quale è più esposta, quali informazioni aggiuntive richiederesti e perché un indice elevato non garantisce da solo una supply chain sicura.</p></div>
+      <textarea id="companyComment" placeholder="Scrivi qui la tua raccomandazione..."></textarea>
+      <div class="btn-group" style="margin-top:10px"><button class="btn secondary" id="copyComment">Copia testo</button><button class="btn ghost" id="downloadComment">Scarica .txt</button></div>
+      <div class="feedback" id="commentFb"></div>
+    </div>
+  </div>
+  <div class="btn-row"><button class="btn secondary" data-to="6">← Indietro</button><button class="btn primary" data-to="8">Vai al quiz →</button></div>
+</section>
+
+<section class="section" id="tab8">
+  <div class="card-intro"><span class="section-number">Sezione 8</span><h2>Autovalutazione finale</h2><p>Rispondi alle domande. Il feedback spiega il ragionamento, non soltanto la risposta corretta.</p></div>
+  <div id="quiz"></div>
+  <div class="kpi-row"><div class="kpi"><div class="n" id="quizScore">0/8</div><div class="l">Risposte corrette</div></div><div class="kpi"><div class="n" id="quizDone">0</div><div class="l">Domande completate</div></div><div class="kpi"><div class="n" id="quizPerc">0%</div><div class="l">Punteggio</div></div><div class="kpi"><div class="n" id="quizLevel">—</div><div class="l">Livello</div></div></div>
+  <div class="tip"><strong>Messaggio finale.</strong> Due distribuzioni possono avere lo stesso numero di categorie ma livelli di eterogeneità molto diversi. Conta sia quante categorie sono presenti, sia come le frequenze sono ripartite.</div>
+  <div class="btn-row"><button class="btn secondary" data-to="7">← Indietro</button><button class="btn primary" data-to="1">Ricomincia dall’inizio</button></div>
+</section>
+  </div>
+  <footer>E-tivity 4 · Statistica per l’Azienda · Materiale didattico interattivo</footer>
+</div>
+<script>
+const tabs=[...document.querySelectorAll('.tab')], sections=[...document.querySelectorAll('.section')];
+function showTab(n){tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab==n));sections.forEach(s=>s.classList.toggle('active',s.id==='tab'+n));window.scrollTo({top:0,behavior:'smooth'});if(n==4)updateSim();if(n==5)updateExperiments();if(n==7)updateCompanies();}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));document.querySelectorAll('[data-to]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.to)));
+function calc(vals){const positive=vals.filter(v=>v>0);const total=vals.reduce((a,b)=>a+b,0);const k=vals.length;const fs=vals.map(v=>total? v/total:0);const sq=fs.map(f=>f*f);const sh=fs.map(f=>f>0? -f*Math.log(f):0);const g=1-sq.reduce((a,b)=>a+b,0);const s=sh.reduce((a,b)=>a+b,0);const gmax=k>1?(k-1)/k:0;const smax=k>1?Math.log(k):0;return{total,k,fs,sq,sh,g,s,gn:gmax?g/gmax:0,sn:smax?s/smax:0,active:positive.length};}
+function f3(x){return Number(x).toFixed(3).replace('.',',')}
+function drawBars(canvas,vals,labels,opts={}){const c=canvas,ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);const m={l:52,r:20,t:25,b:55};const max=opts.max||Math.max(...vals,1);ctx.strokeStyle='#475467';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(m.l,m.t);ctx.lineTo(m.l,H-m.b);ctx.lineTo(W-m.r,H-m.b);ctx.stroke();ctx.font='12px Arial';ctx.fillStyle='#475467';for(let i=0;i<=5;i++){let y=H-m.b-(H-m.t-m.b)*i/5;ctx.fillText((max*i/5).toFixed(1),8,y+4);ctx.strokeStyle='#edf2f7';ctx.beginPath();ctx.moveTo(m.l,y);ctx.lineTo(W-m.r,y);ctx.stroke();}const gap=16,bw=(W-m.l-m.r-gap*(vals.length+1))/vals.length;vals.forEach((v,i)=>{const h=(H-m.t-m.b)*v/max;const x=m.l+gap+i*(bw+gap),y=H-m.b-h;ctx.fillStyle=['#0260b5','#6d5bd0','#147d8d','#9a5b00','#2e7d32'][i%5];ctx.fillRect(x,y,bw,h);ctx.fillStyle='#344054';ctx.textAlign='center';ctx.fillText(labels[i],x+bw/2,H-m.b+20);ctx.fillText((v*100).toFixed(1)+'%',x+bw/2,Math.max(m.t+12,y-6));});ctx.textAlign='left';}
+const cats=['A','B','C','D','E'];let simVals=[20,20,20,20,20];const tbody=document.querySelector('#simTable tbody');
+function buildTable(){tbody.innerHTML='';cats.forEach((c,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${c}</td><td><input type="number" min="0" step="1" data-i="${i}" value="${simVals[i]}"></td><td id="f${i}">—</td><td id="sq${i}">—</td><td id="sh${i}">—</td>`;tbody.appendChild(tr);});tbody.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{simVals[+e.target.dataset.i]=Math.max(0,+e.target.value||0);updateSim();}));}
+function updateSim(){const r=calc(simVals);r.fs.forEach((f,i)=>{document.getElementById('f'+i).textContent=f3(f);document.getElementById('sq'+i).textContent=f3(r.sq[i]);document.getElementById('sh'+i).textContent=f3(r.sh[i]);});sumN.textContent=r.total;sumF.textContent=f3(r.fs.reduce((a,b)=>a+b,0));sumSq.textContent=f3(r.sq.reduce((a,b)=>a+b,0));sumSh.textContent=f3(r.sh.reduce((a,b)=>a+b,0));gRaw.textContent=f3(r.g);gNorm.textContent=f3(r.gn);sRaw.textContent=f3(r.s);sNorm.textContent=f3(r.sn);gGauge.style.width=(r.gn*100)+'%';sGauge.style.width=(r.sn*100)+'%';drawBars(simCanvas,r.fs,cats,{max:1});let msg=r.total===0?'Inserisci almeno una frequenza positiva.':r.gn<.15?'Distribuzione quasi completamente concentrata in una categoria.':r.gn<.5?'Eterogeneità bassa o moderata: alcune categorie dominano.':r.gn<.85?'Eterogeneità elevata, ma non massima.':'Distribuzione molto equilibrata: eterogeneità prossima al massimo.';simReadout.innerHTML=`<strong>${msg}</strong><br/>Categorie attive: ${r.active} su ${r.k}. La normalizzazione considera comunque le ${r.k} categorie definite nella tabella.`;}
+buildTable();updateSim();
+const presets={balanced:[20,20,20,20,20],concentrated:[100,0,0,0,0],dominant:[70,10,10,5,5],gradual:[40,25,15,12,8],two:[50,50,0,0,0],rare:[49,25,25,1,0]};
+function setSim(v){simVals=[...v];tbody.querySelectorAll('input').forEach((x,i)=>x.value=simVals[i]);updateSim();}
+applyScenario.onclick=()=>{const v=scenarioSelect.value==='random'?Array.from({length:5},()=>Math.floor(Math.random()*50)+1):presets[scenarioSelect.value];setSim(v)};equalize.onclick=()=>setSim([20,20,20,20,20]);resetSim.onclick=()=>{scenarioSelect.value='balanced';setSim([20,20,20,20,20]);};
+function updateExperiments(){const t=+transferSlider.value;transferVal.textContent=t;const each=t/4,v=[80-t,5+each,5+each,5+each,5+each],r=calc(v);[ta,tb,tc,td,te].forEach((el,i)=>el.textContent=f3(v[i]));tg.textContent=f3(r.gn);ts.textContent=f3(r.sn);const a=calc([50,30,20]),b=calc([50,30,10,10]);splitResult.innerHTML=`Prima: Gini norm. <strong>${f3(a.gn)}</strong>, Shannon norm. <strong>${f3(a.sn)}</strong>.<br/>Dopo la divisione: Gini norm. <strong>${f3(b.gn)}</strong>, Shannon norm. <strong>${f3(b.sn)}</strong>.`;const c=calc([50,25,25]),d=calc([49,25,25,1]);rareResult.innerHTML=`Senza categoria rara: Gini norm. <strong>${f3(c.gn)}</strong>, Shannon norm. <strong>${f3(c.sn)}</strong>.<br/>Con categoria rara: Gini norm. <strong>${f3(d.gn)}</strong>, Shannon norm. <strong>${f3(d.sn)}</strong>.`;}
+transferSlider.oninput=updateExperiments;updateExperiments();
+const companies={Alfa:[25,25,25,25],Beta:[60,20,15,5],Gamma:[90,5,3,2]};
+function updateCompanies(){companyRows.innerHTML='';Object.entries(companies).forEach(([n,v])=>{const r=calc(v);companyRows.innerHTML+=`<tr><td class="left"><strong>${n}</strong></td>${v.map(x=>`<td>${x}%</td>`).join('')}<td>${f3(r.gn)}</td><td>${f3(r.sn)}</td></tr>`});const n=companySelect.value,v=companies[n],r=calc(v);drawBars(companyCanvas,v.map(x=>x/100),['F1','F2','F3','F4'],{max:1});companyReadout.innerHTML=`<strong>${n}</strong>: il fornitore principale pesa ${Math.max(...v)}%. Gini normalizzato = <strong>${f3(r.gn)}</strong>; Shannon normalizzato = <strong>${f3(r.sn)}</strong>. ${n==='Alfa'?'È la distribuzione più equilibrata.':n==='Gamma'?'È fortemente dipendente dal primo fornitore.':'Presenta una diversificazione intermedia.'}`;}
+companySelect.onchange=updateCompanies;updateCompanies();
+copyComment.onclick=async()=>{try{await navigator.clipboard.writeText(companyComment.value);commentFb.className='feedback ok';commentFb.textContent='Testo copiato negli appunti.';}catch(e){commentFb.className='feedback err';commentFb.textContent='Copia non disponibile: seleziona e copia manualmente.';}};
+downloadComment.onclick=()=>{const blob=new Blob([companyComment.value],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='etivity4_raccomandazione_supply_chain.txt';a.click();URL.revokeObjectURL(a.href);};
+const questions=[
+ {q:'Quando l’indice di eterogeneità di Gini vale 0?',a:['Quando tutte le categorie hanno la stessa frequenza','Quando una sola categoria contiene tutte le unità','Quando esistono due categorie'],c:1,e:'Il minimo si ottiene con completa omogeneità: una frequenza relativa è 1 e tutte le altre sono 0.'},
+ {q:'Con cinque categorie, qual è il massimo del Gini grezzo?',a:['0,5','0,8','1'],c:1,e:'Il massimo è (k−1)/k = 4/5 = 0,8.'},
+ {q:'Perché si normalizzano gli indici?',a:['Per eliminare le categorie rare','Per confrontare distribuzioni con numeri di categorie differenti','Per trasformare le frequenze in percentuali'],c:1,e:'Il massimo grezzo dipende da k; la normalizzazione porta il range a 0–1.'},
+ {q:'Quando Shannon raggiunge il massimo?',a:['Quando tutte le categorie sono equiprobabili','Quando una categoria domina','Quando le categorie sono ordinate alfabeticamente'],c:0,e:'L’incertezza è massima quando ogni categoria ha probabilità 1/k.'},
+ {q:'Che cosa accade dividendo una categoria in due sottocategorie?',a:['Gli indici non possono cambiare','L’eterogeneità osservata può aumentare','Il Gini diventa sempre 0'],c:1,e:'Gli indici dipendono anche dalla granularità della classificazione.'},
+ {q:'Quale indice tende a essere particolarmente sensibile alla presenza di categorie rare?',a:['Shannon','La media aritmetica','Il range'],c:0,e:'Il termine −f log(f) registra anche piccole frequenze.'},
+ {q:'Il coefficiente di Gini della disuguaglianza coincide con l’indice categoriale di questa attività?',a:['Sì, è la stessa formula','No, sono misure diverse associate allo stesso autore','Solo quando k=2'],c:1,e:'Il coefficiente di concentrazione e l’indice di eterogeneità rispondono a domande diverse.'},
+ {q:'Un alto indice di eterogeneità del personale dimostra automaticamente inclusione e qualità organizzativa?',a:['Sì','No: descrive la distribuzione, non la qualità delle relazioni o l’equità','Solo nelle grandi imprese'],c:1,e:'Un indice sintetico deve essere interpretato nel contesto e integrato con altre informazioni.'}
+];
+let answers={};function renderQuiz(){quiz.innerHTML='';questions.forEach((x,i)=>{const div=document.createElement('div');div.className='card';div.innerHTML=`<div class="card-head light">Domanda ${i+1}</div><div class="card-body"><p><strong>${x.q}</strong></p>${x.a.map((z,j)=>`<button class="quiz-option" data-q="${i}" data-a="${j}">${z}</button>`).join('')}<div class="feedback" id="qfb${i}"></div></div>`;quiz.appendChild(div)});quiz.querySelectorAll('.quiz-option').forEach(b=>b.onclick=()=>answerQ(+b.dataset.q,+b.dataset.a,b));}
+function answerQ(q,a,btn){answers[q]=a;document.querySelectorAll(`[data-q="${q}"]`).forEach(b=>{b.disabled=true;b.classList.toggle('correct',+b.dataset.a===questions[q].c);b.classList.toggle('wrong',+b.dataset.a===a&&a!==questions[q].c)});const ok=a===questions[q].c,fb=document.getElementById('qfb'+q);fb.className='feedback '+(ok?'ok':'err');fb.innerHTML=(ok?'<strong>Corretto.</strong> ':'<strong>Da rivedere.</strong> ')+questions[q].e;const done=Object.keys(answers).length,score=Object.entries(answers).filter(([i,v])=>v===questions[i].c).length,p=Math.round(score/questions.length*100);quizScore.textContent=`${score}/${questions.length}`;quizDone.textContent=done;quizPerc.textContent=p+'%';quizLevel.textContent=p>=85?'Ottimo':p>=65?'Buono':p>=45?'Base':'Da rivedere';}
+renderQuiz();
+</script>
+
+<footer class="salini-copyright" style="margin:26px auto 8px;max-width:1180px;padding:14px 18px;text-align:center;font-size:12px;line-height:1.45;color:#667085;border-top:1px solid #dce5ef;">© Silvia Salini · Materiale didattico. Tutti i diritti riservati.</footer>
+</body>
+</html>

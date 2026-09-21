@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>E-tivity 4.3 – Il paradosso di Simpson · v4</title>
+<style>
+:root{
+  --blue:#014082;--blue2:#0260b5;--light:#e8f3ff;--ink:#20242c;--muted:#667085;
+  --orange:#a75c00;--orange2:#fff6e8;--green:#2e7d32;--red:#b42318;
+  --purple:#6d5bd0;--teal:#147d8d;--line:#dce5ef;--soft:#f4f7fb;--card:#fff;
+  --gold:#b78a3d;--paper:#fffdf7;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);font-family:Arial,"Helvetica Neue",sans-serif;color:var(--ink);font-size:16px}
+.wrap{max-width:1180px;margin:28px auto;padding:0 16px 55px}
+.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-radius:12px 12px 0 0;padding:38px 24px 28px;text-align:center;box-shadow:0 7px 20px rgba(1,64,130,.16)}
+.header .kicker{text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:800;opacity:.82;margin-bottom:9px}.header h1{font-size:32px;line-height:1.2;margin:0 0 7px}.header p{margin:0;font-size:18px;opacity:.95}
+.meta{background:#fff;border:1px solid var(--line);border-top:0;padding:11px 16px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap}.pill{border:1px solid #cbd9e9;background:#f8fbff;color:var(--blue);padding:7px 11px;border-radius:999px;font-size:14px;font-weight:800}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border:1px solid var(--line);border-top:0;border-bottom:2px solid var(--blue);scrollbar-width:none}.tabbar::-webkit-scrollbar{display:none}.tab{border:0;border-right:1px solid var(--line);border-bottom:3px solid transparent;background:#fff;color:#697386;padding:12px 10px;min-width:135px;flex:1;font:700 12.5px Arial;cursor:pointer;white-space:nowrap}.tab:hover{background:#f8fbff;color:var(--blue)}.tab.active{background:var(--light);color:var(--blue);border-bottom-color:var(--blue);margin-bottom:-2px}
+.content{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:27px 30px;box-shadow:0 12px 28px rgba(23,39,64,.08)}.section{display:none}.section.active{display:block}
+.intro{background:var(--blue);color:#fff;border-radius:11px;padding:19px 22px;margin-bottom:20px}.intro h2{margin:0 0 7px;font-size:22px}.intro p{margin:0;line-height:1.65}
+.card{background:#fff;border:1px solid #e3e8ef;border-radius:12px;margin-bottom:20px;overflow:hidden}.card-head{padding:14px 19px;font-size:18px;font-weight:800}.card-head.light{background:var(--light);color:var(--blue)}.card-head.dark{background:var(--blue);color:#fff}.card-head.orange{background:var(--orange2);color:#8b4707}.card-body{padding:19px 21px;line-height:1.68}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:18px}.mini{background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:16px;line-height:1.58}.mini strong{color:var(--blue)}
+.question{background:var(--orange2);border:2px solid var(--orange);border-radius:12px;padding:18px;margin-bottom:20px}.question h3{color:#8e4c00;margin:0 0 8px}.tip,.warn,.okbox{padding:13px 15px;border-radius:0 9px 9px 0;margin:13px 0;line-height:1.62}.tip{background:#f4f9ff;border-left:5px solid var(--blue)}.warn{background:#fff4e5;border-left:5px solid var(--orange)}.okbox{background:#eef8ef;border-left:5px solid var(--green)}
+.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:15px}.btn{border:0;border-radius:8px;padding:10px 17px;font:800 14px Arial;cursor:pointer;transition:.15s}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#eaf2fb;color:var(--blue)}.btn.orange{background:var(--orange);color:#fff}.btn.ghost{background:#fff;border:1px solid #bfd0e2;color:var(--blue)}.btn.active{box-shadow:0 0 0 3px rgba(1,64,130,.18)}
+.choice{display:block;width:100%;text-align:left;border:1px solid #d6dee8;background:#fff;border-radius:9px;padding:11px 13px;margin:9px 0;cursor:pointer;font:700 15px Arial;color:#344054}.choice:hover{background:#f6faff;border-color:#9ebfe4}.choice.correct{background:#eaf7ec;border-color:#6ab375;color:#1f6a29}.choice.wrong{background:#fff0ef;border-color:#df8078;color:#92231c}.choice:disabled{cursor:default}
+.feedback{display:none;padding:12px 14px;border-radius:8px;margin-top:12px}.feedback.show{display:block}.feedback.ok{background:#eef8ef;border:1px solid #b9dfbf;color:#1f6a29}.feedback.err{background:#fff0ef;border:1px solid #f3c3bf;color:#8e2018}
+.section-nav{display:flex;justify-content:space-between;gap:12px;margin-top:25px;padding-top:17px;border-top:1px solid var(--line)}
+.newspaper{background:var(--paper);border:1px solid #d7d1c3;border-radius:10px;padding:24px;box-shadow:0 8px 18px rgba(66,54,32,.09)}.paper-top{display:flex;justify-content:space-between;gap:18px;border-bottom:4px double #222;padding-bottom:10px;margin-bottom:15px;font-family:Georgia,serif}.paper-brand{font-size:30px;font-weight:700;letter-spacing:.2px}.paper-meta{font-size:13px;color:#555;text-align:right}.headline{font-family:Georgia,serif;font-size:34px;line-height:1.12;margin:10px 0}.deck{font-family:Georgia,serif;font-size:18px;color:#444;line-height:1.45;border-left:4px solid var(--gold);padding-left:13px}
+.datatable{width:100%;border-collapse:collapse;margin:15px 0}.datatable th,.datatable td{padding:10px 11px;border-bottom:1px solid #dce5ef;text-align:right}.datatable th:first-child,.datatable td:first-child{text-align:left}.datatable th{background:#f3f7fb;color:var(--blue)}.datatable tr:last-child td{border-bottom:0}.big{font-size:21px;font-weight:900;color:var(--blue)}
+.controls{background:#fff9f0;border:2px solid var(--orange);border-radius:12px;padding:17px}.control{margin:12px 0}.control label{display:flex;justify-content:space-between;font-weight:800;color:#344054;margin-bottom:7px}.control input[type=range]{width:100%;accent-color:var(--orange)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:14px 0}.kpi{background:#f8fbff;border:1px solid #dce9f7;border-radius:10px;padding:12px;text-align:center}.kpi span{display:block;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}.kpi b{display:block;color:var(--blue);font-size:20px;margin-top:5px}
+.canvas-wrap{background:#fff;border:1px solid #dfe6ee;border-radius:12px;padding:10px;overflow:hidden}.canvas-wrap canvas{width:100%;height:auto;display:block}.legend{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;font-size:13px;color:#475467;margin-top:8px}.dot{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.formula{background:#f0f6ff;border:1px solid #bfd6f2;border-radius:10px;padding:14px 16px;text-align:center;color:var(--blue);font-weight:800;font-size:17px;line-height:1.75;margin:13px 0}.toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toggle button{border:1.5px solid #c7d2df;background:#fff;color:var(--blue);padding:9px 13px;border-radius:999px;font-weight:800;cursor:pointer}.toggle button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px}.flowbox{border:1px solid #dce5ef;border-radius:10px;background:#f8fbff;padding:15px;text-align:center}.arrow{font-size:26px;color:var(--orange);font-weight:900}
+.status{border-radius:12px;padding:15px;text-align:center;font-weight:900;font-size:18px;margin:12px 0}.status.paradox{background:#fff0ef;color:#92231c;border:1px solid #efb3ae}.status.normal{background:#eef8ef;color:#1f6a29;border:1px solid #b9dfbf}
+.practice-card{border:1px solid #dfe6ee;border-radius:12px;overflow:hidden;margin-bottom:20px;background:#fff}.practice-head{background:#f3f7fb;color:var(--blue);padding:14px 18px;font-weight:900;font-size:18px}.practice-body{padding:18px}.practice-image{max-width:690px;width:100%;display:block;margin:0 auto;border-radius:8px;border:1px solid #d9e1ea}.reveal{display:none;margin-top:15px}.reveal.show{display:block}
+.infographic{border-radius:12px;overflow:hidden;border:1px solid #d8dee7;background:#f9fbfe}.info-banner{padding:18px 20px;color:#fff;background:linear-gradient(135deg,#475467,#1d2939)}.info-banner.work{background:linear-gradient(135deg,#5b3f95,#283593)}.info-banner.sport{background:linear-gradient(135deg,#176b45,#0b4f34)}.info-banner .eyebrow{text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:1.4px;opacity:.85}.info-banner h3{font-family:Georgia,serif;font-size:27px;margin:7px 0 4px;line-height:1.17}.info-banner p{margin:0;opacity:.92}.info-content{padding:18px}.big-compare{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;text-align:center;margin:8px 0 15px}.big-compare .metric{border:1px solid #dce5ef;border-radius:12px;padding:15px;background:#fff}.big-compare .metric b{display:block;font-size:31px;color:var(--blue);margin-top:3px}.versus{font-weight:900;color:var(--muted)}
+.checklist label{display:block;padding:10px 0;border-bottom:1px solid #e7edf4}.checklist input{margin-right:9px}.stepgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{border:1px solid #dce5ef;border-radius:12px;padding:15px;background:#f8fbff}.step b{display:grid;place-items:center;width:30px;height:30px;background:var(--blue);color:#fff;border-radius:50%;margin-bottom:9px}.step strong{color:var(--blue)}
+.progress{height:9px;background:#e5eaf0;border-radius:99px;overflow:hidden;margin:10px 0 18px}.progress>div{height:100%;width:0;background:var(--blue);transition:.25s}.small{font-size:13px;color:var(--muted)}details{border:1px solid #dce5ef;border-radius:10px;margin:12px 0;background:#fafcff}summary{cursor:pointer;padding:13px 15px;font-weight:800;color:var(--blue)}details>div{padding:0 15px 15px;line-height:1.65}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+@media(max-width:850px){.grid2,.grid3,.hero-grid,.stepgrid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.content{padding:20px 16px}.header h1{font-size:27px}.tab{min-width:145px}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.headline{font-size:28px}.paper-top{display:block}.paper-meta{text-align:left;margin-top:8px}.big-compare{grid-template-columns:1fr}.versus{transform:rotate(90deg)}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}.wrap{padding:0 8px 35px}.content{padding:19px 12px}.newspaper{padding:17px}.headline{font-size:25px}}
+
+.headline-lab{display:grid;gap:20px}
+.headline-case{border:1px solid #d8e1eb;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 8px 18px rgba(23,39,64,.06)}
+.headline-case .case-top{padding:18px 20px;color:#fff;background:linear-gradient(135deg,#374151,#111827)}
+.headline-case.work .case-top{background:linear-gradient(135deg,#5b3f95,#283593)}
+.headline-case.culture .case-top{background:linear-gradient(135deg,#a14d00,#6f3100)}
+.headline-case.mobility .case-top{background:linear-gradient(135deg,#147d8d,#075968)}
+.case-kicker{text-transform:uppercase;letter-spacing:1.4px;font-size:12px;font-weight:900;opacity:.84}
+.case-title{font-family:Georgia,serif;font-size:28px;line-height:1.18;margin:7px 0 5px}
+.case-deck{margin:0;line-height:1.45;opacity:.94}
+.case-main{padding:18px 20px}
+.case-question{background:#fff8ec;border:1px solid #ebc98f;border-radius:10px;padding:14px;margin-top:14px}
+.case-reveal{display:none;margin-top:16px;border-top:2px dashed #cbd5e1;padding-top:16px}
+.case-reveal.show{display:block}
+.hidden-variable{display:inline-block;background:#fff0d8;color:#8a4800;border:1px solid #e7bd78;border-radius:999px;padding:7px 11px;font-weight:900;margin-bottom:10px}
+.split-tables{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.split-table{border:1px solid #dce5ef;border-radius:10px;overflow:hidden;background:#fff}
+.split-table h4{margin:0;padding:11px 13px;background:#edf5ff;color:var(--blue)}
+.split-table .datatable{margin:0}
+.reversal-note{background:#eef8ef;border-left:5px solid var(--green);padding:12px 14px;border-radius:0 9px 9px 0;margin-top:13px;line-height:1.6}
+.marginal-badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#edf5ff;color:var(--blue);font-size:12px;font-weight:900;margin-bottom:8px}
+@media(max-width:850px){.split-tables{grid-template-columns:1fr}.case-title{font-size:24px}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="header"><div class="kicker">Blocco 4 · E-tivity 3</div><h1>Il paradosso di Simpson</h1><p>Quando i dati aggregati ingannano</p></header>
+<div class="meta"><span class="pill">Durata: 60 minuti</span><span class="pill">Tabelle a doppia entrata</span><span class="pill">Probabilità condizionate</span><span class="pill">Project work</span></div>
+<nav class="tabbar" aria-label="Sezioni">
+<button class="tab active" data-target="s1">1. Il titolo</button><button class="tab" data-target="s2">2. Dentro i dati</button><button class="tab" data-target="s3">3. Esplora</button><button class="tab" data-target="s4">4. Simpson</button><button class="tab" data-target="s5">5. Project work</button><button class="tab" data-target="s6">6. Trova l'errore</button><button class="tab" data-target="s7">7. Verifica</button>
+</nav>
+<main class="content">
+
+<section id="s1" class="section active">
+<div class="intro"><h2>Una conclusione apparentemente ovvia</h2><p>Leggi il titolo, la breve nota e la tabella. Quale conclusione trarresti?</p></div>
+<div class="newspaper">
+  <div class="paper-top"><div class="paper-brand">Economia & Mercati</div><div class="paper-meta">Edizione simulata<br/>Dati a fini didattici</div></div>
+  <div class="headline">Fondi ESG meno redditizi dei fondi tradizionali</div>
+  <div class="deck">L'analisi aggregata su 1.200 fondi europei mostra un rendimento medio inferiore di quasi un punto percentuale.</div>
+  <p><strong>Che cosa sono i fondi ESG?</strong> Sono fondi di investimento che, oltre ai criteri economico-finanziari, selezionano le imprese anche sulla base di criteri ambientali (<em>Environmental</em>), sociali (<em>Social</em>) e di governance (<em>Governance</em>).</p>
+  <table class="datatable">
+    <thead><tr><th>Tipologia</th><th>Numero fondi</th><th>Rendimento medio</th></tr></thead>
+    <tbody>
+      <tr><td>ESG <span class="small">(412 a basso rischio; 188 ad alto rischio)</span></td><td>600</td><td class="big">6,2%</td></tr>
+      <tr><td>Tradizionali <span class="small">(291 a basso rischio; 309 ad alto rischio)</span></td><td>600</td><td class="big">7,1%</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Fonte: elaborazione simulata su 1.200 fondi europei.</p>
+</div>
+<div class="question" style="margin-top:20px"><h3>Il titolo è giustificato?</h3>
+<button class="choice firstq" data-ok="0">Sì: 7,1% è maggiore di 6,2%, quindi i fondi tradizionali sono migliori.</button>
+<button class="choice firstq" data-ok="0">No: i fondi ESG sono necessariamente migliori perché seguono criteri di sostenibilità.</button>
+<button class="choice firstq" data-ok="1">Il dato aggregato suggerisce un vantaggio dei fondi tradizionali, ma prima di generalizzare esaminerei meglio la composizione dei due gruppi.</button>
+<div id="firstFb" class="feedback"></div></div>
+<div class="section-nav"><span></span><button class="btn primary next" data-next="s2">Continua: entra nei dati →</button></div>
+</section>
+
+<section id="s2" class="section">
+<div class="intro"><h2>La composizione dei gruppi cambia il confronto</h2><p>La tabella a doppia entrata descrive come i livelli di rischio sono distribuiti tra fondi ESG e tradizionali. Le percentuali di riga diventano probabilità condizionate.</p></div>
+<div class="hero-grid">
+<div class="card"><div class="card-head light">Tipologia di fondo × livello di rischio</div><div class="card-body">
+<div class="toggle"><button id="showCounts" class="active">Numeri</button><button id="showRows">Percentuali di riga</button></div>
+<table class="datatable"><thead><tr><th>Tipologia</th><th>Basso rischio</th><th>Alto rischio</th><th>Totale</th></tr></thead><tbody id="riskTable"></tbody></table>
+<div id="riskInterpretation" class="tip"></div>
+</div></div>
+<div class="card"><div class="card-head orange">Il confronto corretto</div><div class="card-body">
+<table class="datatable"><thead><tr><th>Classe di rischio</th><th>ESG</th><th>Tradizionali</th><th>Vantaggio</th></tr></thead><tbody><tr><td>Basso</td><td class="big">4,1%</td><td>3,8%</td><td>ESG +0,3 p.p.</td></tr><tr><td>Alto</td><td class="big">10,8%</td><td>10,2%</td><td>ESG +0,6 p.p.</td></tr></tbody></table>
+<div class="okbox"><strong>Ribaltamento:</strong> i fondi ESG hanno un rendimento medio superiore in entrambe le classi di rischio, ma inferiore nel totale.</div>
+</div></div>
+</div>
+<details><summary>Approfondisci: le quote della tabella sono probabilità</summary><div>
+<p>Se scegliamo un fondo ESG a caso:</p><div class="formula">P(Basso rischio | ESG) = 412/600 = 68,7%</div>
+<p>Se scegliamo un fondo tradizionale a caso:</p><div class="formula">P(Basso rischio | Tradizionale) = 291/600 = 48,5%</div>
+<p>Le due tipologie non hanno quindi la stessa composizione per rischio.</p></div></details>
+<details><summary>Approfondisci: perché il totale vale 6,2% e 7,1%?</summary><div>
+<p>Il rendimento aggregato è una media ponderata. I pesi sono proprio le probabilità condizionate ricavate dalla tabella.</p>
+<div class="formula">E(R | ESG) = 0,687 × 4,1 + 0,313 × 10,8 ≈ 6,2%</div>
+<div class="formula">E(R | Trad.) = 0,485 × 3,8 + 0,515 × 10,2 ≈ 7,1%</div>
+</div></details>
+<div class="question"><h3>Qual è l'informazione decisiva?</h3><button class="choice riskq" data-ok="0">I due gruppi contengono lo stesso numero totale di fondi.</button><button class="choice riskq" data-ok="1">I fondi ESG sono più concentrati nel basso rischio, che offre rendimenti medi inferiori.</button><button class="choice riskq" data-ok="0">Il rendimento medio non può mai essere confrontato.</button><div id="riskFb" class="feedback"></div></div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s1">← Indietro</button><button class="btn primary next" data-next="s3">Continua: modifica i pesi →</button></div>
+</section>
+
+<section id="s3" class="section">
+<div class="intro"><h2>Fai nascere il paradosso</h2><p>Le prestazioni nei due livelli di rischio restano fisse. Cambia soltanto la composizione dei gruppi e osserva come si muove il risultato aggregato.</p></div>
+<div class="grid2">
+<div class="controls">
+<div class="control"><label>Quota ESG a basso rischio <span id="esgLowVal">69%</span></label><input id="esgLow" type="range" min="10" max="90" step="1" value="69"/></div>
+<div class="control"><label>Quota tradizionali a basso rischio <span id="tradLowVal">49%</span></label><input id="tradLow" type="range" min="10" max="90" step="1" value="49"/></div>
+<div class="btn-row"><button class="btn ghost preset" data-e="69" data-t="49">Caso dell'articolo</button><button class="btn ghost preset" data-e="50" data-t="50">Stessa composizione</button><button class="btn ghost preset" data-e="80" data-t="20">Ribaltamento forte</button></div>
+<div class="tip"><strong>Valori interni fissi:</strong><br/>Basso rischio: ESG 4,1%, Tradizionali 3,8%.<br/>Alto rischio: ESG 10,8%, Tradizionali 10,2%.</div>
+</div>
+<div class="card"><div class="card-head light">Tre confronti sulla stessa scala</div><div class="card-body"><div id="simpsonStatus" class="status paradox"></div><div class="canvas-wrap"><canvas id="simpsonChart" width="900" height="470"></canvas></div><div class="legend"><span><i class="dot" style="background:#147d8d"></i>ESG</span><span><i class="dot" style="background:#6d5bd0"></i>Tradizionali</span></div></div></div>
+</div>
+<div class="kpis"><div class="kpi"><span>ESG a basso rischio</span><b id="esgCount">—</b></div><div class="kpi"><span>Trad. a basso rischio</span><b id="tradCount">—</b></div><div class="kpi"><span>ESG aggregato</span><b id="esgAgg">—</b></div><div class="kpi"><span>Trad. aggregato</span><b id="tradAgg">—</b></div></div>
+<div class="warn"><strong>Non sono cambiati i rendimenti entro i gruppi.</strong> È cambiato soltanto il peso assegnato a basso e alto rischio. Questo basta per modificare, e talvolta ribaltare, il confronto complessivo.</div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s2">← Indietro</button><button class="btn primary next" data-next="s4">Continua: che cosa significa? →</button></div>
+</section>
+
+<section id="s4" class="section">
+<div class="intro"><h2>Un paradosso solo apparente</h2><p>Il risultato aggregato non è falso: risponde a una domanda diversa da quella posta dai confronti entro i gruppi.</p></div>
+<div class="grid2">
+<div class="card"><div class="card-head light">Perché si chiama così?</div><div class="card-body"><p>Nel 1951 Edward H. Simpson pubblicò <em>The Interpretation of Interaction in Contingency Tables</em>, un articolo divenuto il riferimento moderno per questo tipo di ribaltamento.</p><p>Fenomeni analoghi erano già stati discussi da Karl Pearson e George Udny Yule. Il nome “paradosso di Simpson” si è però consolidato in seguito alla diffusione del lavoro di Simpson.</p><div class="tip"><strong>Non è una contraddizione matematica.</strong> Le medie aggregate usano pesi differenti e possono quindi raccontare una storia diversa.</div></div></div>
+<div class="card"><div class="card-head orange">Marginale e condizionata</div><div class="card-body"><div class="mini"><strong>Associazione marginale</strong><p>Confronta ESG e tradizionali senza distinguere il rischio: 6,2% contro 7,1%.</p></div><div class="mini" style="margin-top:12px"><strong>Associazione condizionata</strong><p>Confronta ESG e tradizionali a parità di rischio: ESG è superiore in entrambi i livelli.</p></div></div></div>
+</div>
+<div class="flow"><div class="flowbox"><strong>Tipologia di fondo</strong><br/><span class="small">ESG o tradizionale</span></div><div class="arrow">↔</div><div class="flowbox"><strong>Livello di rischio</strong><br/><span class="small">influenza il rendimento ed è distribuito diversamente</span></div><div class="arrow">→</div><div class="flowbox"><strong>Rendimento</strong><br/><span class="small">risultato osservato</span></div></div>
+<div class="warn"><strong>Variabile confondente:</strong> il rischio è associato sia alla tipologia del fondo sia al rendimento. Ignorarlo porta a confrontare gruppi con composizioni differenti.</div>
+<div class="grid2"><div class="mini"><strong>Non disaggregare automaticamente tutto</strong><p>La variabile di controllo deve essere plausibile e rilevante per il fenomeno studiato.</p></div><div class="mini"><strong>Non confondere associazione e causalità</strong><p>Il ribaltamento segnala un problema interpretativo, ma da solo non dimostra quale relazione sia causale.</p></div></div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s3">← Indietro</button><button class="btn primary next" data-next="s5">Continua: applicalo al project work →</button></div>
+</section>
+
+<section id="s5" class="section">
+<div class="intro"><h2>Una procedura per il project work</h2><p>Quando una tabella aggregata suggerisce una conclusione, fermati prima di interpretarla e verifica se il risultato è stabile nei sottogruppi.</p></div>
+<div class="stepgrid"><div class="step"><b>1</b><strong>Descrivi il totale</strong><p>Calcola percentuali, medie o tassi aggregati senza trasformarli subito in una spiegazione causale.</p></div><div class="step"><b>2</b><strong>Cerca variabili rilevanti</strong><p>Considera rischio, settore, territorio, periodo, canale, segmento o complessità.</p></div><div class="step"><b>3</b><strong>Condiziona il confronto</strong><p>Costruisci tabelle separate o confronti entro gruppi sufficientemente omogenei.</p></div><div class="step"><b>4</b><strong>Confronta le storie</strong><p>Verifica se direzione e intensità dell'associazione cambiano dopo la disaggregazione.</p></div></div>
+<div class="grid2" style="margin-top:18px"><div class="card"><div class="card-head light">Checklist</div><div class="card-body checklist"><label><input type="checkbox"/> I dati sono aggregati?</label><label><input type="checkbox"/> Esistono sottogruppi sostantivamente rilevanti?</label><label><input type="checkbox"/> I sottogruppi hanno pesi molto diversi?</label><label><input type="checkbox"/> Una variabile può influenzare sia il gruppo sia il risultato?</label><label><input type="checkbox"/> Ho confrontato anche le distribuzioni condizionate?</label><label><input type="checkbox"/> Ho dichiarato i limiti dell'interpretazione?</label></div></div>
+<div class="card"><div class="card-head orange">Domande utili</div><div class="card-body"><div class="mini"><strong>Il tempo conta?</strong><p>Un'associazione aggregata può nascondere fasi economiche o periodi molto diversi.</p></div><div class="mini" style="margin-top:12px"><strong>Il mix dei casi conta?</strong><p>Clienti, prodotti, territori o attività possono avere difficoltà iniziali differenti.</p></div><div class="mini" style="margin-top:12px"><strong>La variabile è plausibile?</strong><p>Non si disaggrega a caso: serve una motivazione teorica o sostantiva.</p></div></div></div></div>
+<div class="warn"><strong>Regola di prudenza:</strong> non scegliere la tabella aggregata o quella disaggregata soltanto perché conferma la conclusione preferita. La domanda di ricerca e il meccanismo plausibile devono guidare l'interpretazione.</div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s4">← Indietro</button><button class="btn primary next" data-next="s6">Continua: trova l'errore →</button></div>
+</section>
+
+
+<section id="s6" class="section">
+<div class="intro"><h2>Trova l'errore nel titolo</h2><p>I numeri marginali sono corretti, ma il titolo trasforma un confronto aggregato in una conclusione generale. Individua la variabile nascosta e poi controlla le tabelle condizionate.</p></div>
+
+<div class="headline-lab">
+
+<article class="headline-case work">
+  <div class="case-top"><div class="case-kicker">Osservatorio Imprese e Lavoro</div><div class="case-title">Lo smart working riduce la produttività: 74% contro l'81% del lavoro in presenza</div><p class="case-deck">Un'indagine simulata su 2.000 attività sembra premiare nettamente il lavoro svolto in ufficio.</p></div>
+  <div class="case-main">
+    <span class="marginal-badge">Tabella marginale</span>
+    <table class="datatable"><thead><tr><th>Modalità</th><th>Attività produttive</th><th>Non produttive</th><th>Totale</th><th>% produttive</th></tr></thead><tbody><tr><td>Smart working</td><td>740</td><td>260</td><td>1.000</td><td class="big">74%</td></tr><tr><td>In presenza</td><td>810</td><td>190</td><td>1.000</td><td class="big">81%</td></tr></tbody></table>
+    <div class="case-question"><strong>Dov'è l'errore nel titolo?</strong>
+      <button class="choice headline-choice" data-case="work" data-ok="0">Le percentuali sono state calcolate in modo errato.</button>
+      <button class="choice headline-choice" data-case="work" data-ok="1">Confronta le modalità senza controllare la complessità delle attività assegnate.</button>
+      <button class="choice headline-choice" data-case="work" data-ok="0">Non c'è alcun problema: il totale dimostra che la presenza è più produttiva.</button>
+      <div id="workFb" class="feedback"></div>
+    </div>
+    <div id="workReveal" class="case-reveal">
+      <span class="hidden-variable">Variabile nascosta: complessità dell'attività</span>
+      <div class="split-tables">
+        <div class="split-table"><h4>Attività a bassa complessità</h4><table class="datatable"><thead><tr><th>Modalità</th><th>Produttive</th><th>Non produttive</th><th>Totale</th><th>%</th></tr></thead><tbody><tr><td>Smart</td><td>180</td><td>20</td><td>200</td><td class="big">90%</td></tr><tr><td>Presenza</td><td>720</td><td>130</td><td>850</td><td>84,7%</td></tr></tbody></table></div>
+        <div class="split-table"><h4>Attività ad alta complessità</h4><table class="datatable"><thead><tr><th>Modalità</th><th>Produttive</th><th>Non produttive</th><th>Totale</th><th>%</th></tr></thead><tbody><tr><td>Smart</td><td>560</td><td>240</td><td>800</td><td class="big">70%</td></tr><tr><td>Presenza</td><td>90</td><td>60</td><td>150</td><td>60%</td></tr></tbody></table></div>
+      </div>
+      <div class="reversal-note"><strong>Il titolo si ribalta:</strong> lo smart working è associato a una quota produttiva maggiore in entrambi i livelli di complessità. Nel totale appare peggiore perché l'80% delle attività in smart working è ad alta complessità, contro il 15% di quelle in presenza.</div>
+    </div>
+  </div>
+</article>
+
+<article class="headline-case culture">
+  <div class="case-top"><div class="case-kicker">Rapporto Cultura e Generazioni</div><div class="case-title">La Gen Z legge meno dei Millennials: solo il 62% raggiunge cinque libri all'anno</div><p class="case-deck">Il luogo comune sembra confermato da un'indagine simulata su 2.000 adulti. Gen Z: nati indicativamente dal 1997; Millennials: nati indicativamente tra il 1981 e il 1996.</p></div>
+  <div class="case-main">
+    <span class="marginal-badge">Tabella marginale</span>
+    <table class="datatable"><thead><tr><th>Generazione</th><th>Almeno 5 libri</th><th>Meno di 5</th><th>Totale</th><th>% lettori</th></tr></thead><tbody><tr><td>Gen Z</td><td>620</td><td>380</td><td>1.000</td><td class="big">62%</td></tr><tr><td>Millennials</td><td>740</td><td>260</td><td>1.000</td><td class="big">74%</td></tr></tbody></table>
+    <div class="case-question"><strong>Dov'è l'errore nel titolo?</strong>
+      <button class="choice headline-choice" data-case="culture" data-ok="0">Le due generazioni devono avere la stessa numerosità, altrimenti non si possono confrontare.</button>
+      <button class="choice headline-choice" data-case="culture" data-ok="1">Ignora che le due generazioni hanno una composizione molto diversa per titolo di studio completato.</button>
+      <button class="choice headline-choice" data-case="culture" data-ok="0">La percentuale del 62% è troppo alta per sostenere che la Gen Z legga meno.</button>
+      <div id="cultureFb" class="feedback"></div>
+    </div>
+    <div id="cultureReveal" class="case-reveal">
+      <span class="hidden-variable">Variabile nascosta: titolo di studio completato</span>
+      <div class="split-tables">
+        <div class="split-table"><h4>Senza laurea completata</h4><table class="datatable"><thead><tr><th>Generazione</th><th>≥5 libri</th><th>&lt;5 libri</th><th>Totale</th><th>%</th></tr></thead><tbody><tr><td>Gen Z</td><td>540</td><td>360</td><td>900</td><td class="big">60%</td></tr><tr><td>Millennials</td><td>56</td><td>44</td><td>100</td><td>56%</td></tr></tbody></table></div>
+        <div class="split-table"><h4>Con laurea completata</h4><table class="datatable"><thead><tr><th>Generazione</th><th>≥5 libri</th><th>&lt;5 libri</th><th>Totale</th><th>%</th></tr></thead><tbody><tr><td>Gen Z</td><td>80</td><td>20</td><td>100</td><td class="big">80%</td></tr><tr><td>Millennials</td><td>684</td><td>216</td><td>900</td><td>76%</td></tr></tbody></table></div>
+      </div>
+      <div class="reversal-note"><strong>Il luogo comune non regge:</strong> a parità di titolo di studio completato, la quota di lettori è leggermente maggiore nella Gen Z. Il totale si ribalta perché il campione Gen Z è composto per il 90% da persone che non hanno ancora completato una laurea, mentre tra i Millennials questa quota è solo del 10%.</div>
+    </div>
+  </div>
+</article>
+
+<article class="headline-case mobility">
+  <div class="case-top"><div class="case-kicker">Mobilità Quotidiana</div><div class="case-title">Per arrivare puntuali conviene l'auto: 86% contro l'83% dei mezzi pubblici</div><p class="case-deck">Un monitoraggio simulato di 2.000 spostamenti casa-lavoro sembra confermare una convinzione molto diffusa.</p></div>
+  <div class="case-main">
+    <span class="marginal-badge">Tabella marginale</span>
+    <table class="datatable"><thead><tr><th>Mezzo</th><th>Puntuali</th><th>In ritardo</th><th>Totale</th><th>% puntuali</th></tr></thead><tbody><tr><td>Mezzi pubblici</td><td>830</td><td>170</td><td>1.000</td><td class="big">83%</td></tr><tr><td>Auto</td><td>860</td><td>140</td><td>1.000</td><td class="big">86%</td></tr></tbody></table>
+    <div class="case-question"><strong>Dov'è l'errore nel titolo?</strong>
+      <button class="choice headline-choice" data-case="mobility" data-ok="1">Confronta i mezzi senza distinguere la lunghezza del tragitto.</button>
+      <button class="choice headline-choice" data-case="mobility" data-ok="0">La puntualità non può essere espressa con una percentuale.</button>
+      <button class="choice headline-choice" data-case="mobility" data-ok="0">Non c'è errore: il vantaggio di tre punti dimostra che l'auto è sempre preferibile.</button>
+      <div id="mobilityFb" class="feedback"></div>
+    </div>
+    <div id="mobilityReveal" class="case-reveal">
+      <span class="hidden-variable">Variabile nascosta: distanza del tragitto</span>
+      <div class="split-tables">
+        <div class="split-table"><h4>Tragitti brevi</h4><table class="datatable"><thead><tr><th>Mezzo</th><th>Puntuali</th><th>Ritardo</th><th>Totale</th><th>%</th></tr></thead><tbody><tr><td>Mezzi pubblici</td><td>190</td><td>10</td><td>200</td><td class="big">95%</td></tr><tr><td>Auto</td><td>720</td><td>80</td><td>800</td><td>90%</td></tr></tbody></table></div>
+        <div class="split-table"><h4>Tragitti lunghi</h4><table class="datatable"><thead><tr><th>Mezzo</th><th>Puntuali</th><th>Ritardo</th><th>Totale</th><th>%</th></tr></thead><tbody><tr><td>Mezzi pubblici</td><td>640</td><td>160</td><td>800</td><td class="big">80%</td></tr><tr><td>Auto</td><td>140</td><td>60</td><td>200</td><td>70%</td></tr></tbody></table></div>
+      </div>
+      <div class="reversal-note"><strong>Il titolo confonde composizione ed efficacia:</strong> i mezzi pubblici hanno una puntualità maggiore sia nei tragitti brevi sia in quelli lunghi. Nel totale sembrano peggiori perché sono usati soprattutto nei tragitti lunghi, intrinsecamente più esposti ai ritardi.</div>
+    </div>
+  </div>
+</article>
+
+</div>
+<div class="warn"><strong>Che cosa hanno in comune i tre titoli?</strong> Partono da percentuali marginali vere, sfruttano un luogo comune plausibile e ignorano una variabile che rende i gruppi fortemente sbilanciati. L'errore non è nei conti: è nel passaggio dai conti all'interpretazione.</div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s5">← Indietro</button><button class="btn primary next" data-next="s7">Vai alla verifica →</button></div>
+</section>
+
+<section id="s7" class="section">
+<div class="intro"><h2>Verifica finale</h2><p>Dieci domande per controllare se sai riconoscere aggregazione, probabilità condizionate e variabili confondenti.</p></div><div class="progress"><div id="quizProgress"></div></div><div id="quizBox"></div><div class="section-nav"><button class="btn secondary prev" data-prev="s6">← Indietro</button><button class="btn primary" id="restartQuiz">Ricomincia</button></div>
+</section>
+</main><div class="footer-note">E-tivity con dati simulati a finalità didattica. Le conclusioni degli esempi non descrivono evidenze empiriche reali.</div>
+</div>
+<script>
+const sections=[...document.querySelectorAll('.section')],tabs=[...document.querySelectorAll('.tab')];
+function showSection(id){sections.forEach(s=>s.classList.toggle('active',s.id===id));tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='s3')updateSimpson();}
+tabs.forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.target)));document.querySelectorAll('.next').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.next)));document.querySelectorAll('.prev').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.prev)));
+function bindQuestion(selector,fbId,okText,badText){document.querySelectorAll(selector).forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll(selector).forEach(x=>x.classList.remove('correct','wrong'));const ok=btn.dataset.ok==='1';btn.classList.add(ok?'correct':'wrong');const fb=document.getElementById(fbId);fb.className='feedback show '+(ok?'ok':'err');fb.textContent=ok?okText:badText;}));}
+bindQuestion('.firstq','firstFb','Esatto. Il titolo descrive il risultato complessivo, ma la composizione dei gruppi merita un secondo esame.','Il confronto numerico è corretto, ma nella tabella c’è un’informazione che potrebbe modificare l’interpretazione.');
+bindQuestion('.riskq','riskFb','Esatto. La diversa composizione per rischio assegna pesi diversi ai rendimenti bassi e alti.','Guarda le percentuali di riga: il mix di rischio non è uguale nei due gruppi.');
+const counts=[[412,188,600],[291,309,600]];const riskTable=document.getElementById('riskTable'),riskText=document.getElementById('riskInterpretation');
+function renderRisk(mode){if(mode==='counts'){riskTable.innerHTML=`<tr><td>ESG</td><td>412</td><td>188</td><td>600</td></tr><tr><td>Tradizionali</td><td>291</td><td>309</td><td>600</td></tr>`;riskText.innerHTML='<strong>Numeri assoluti:</strong> entrambi i gruppi contengono 600 fondi, ma la loro distribuzione tra basso e alto rischio è diversa.';}else{riskTable.innerHTML=`<tr><td>ESG</td><td>68,7%</td><td>31,3%</td><td>100%</td></tr><tr><td>Tradizionali</td><td>48,5%</td><td>51,5%</td><td>100%</td></tr>`;riskText.innerHTML='<strong>Probabilità condizionate:</strong> P(Basso rischio | ESG)=68,7%, mentre P(Basso rischio | Tradizionale)=48,5%.';}}
+renderRisk('counts');const showCountsBtn=document.getElementById('showCounts'),showRowsBtn=document.getElementById('showRows');showCountsBtn.onclick=()=>{renderRisk('counts');showCountsBtn.classList.add('active');showRowsBtn.classList.remove('active')};showRowsBtn.onclick=()=>{renderRisk('rows');showRowsBtn.classList.add('active');showCountsBtn.classList.remove('active')};
+const esgLow=document.getElementById('esgLow'),tradLow=document.getElementById('tradLow'),ctx=document.getElementById('simpsonChart').getContext('2d');
+function weighted(lowShare,lowPerf,highPerf){const q=lowShare/100;return q*lowPerf+(1-q)*highPerf;}
+function drawChart(esg,trad){const c=ctx.canvas,w=c.width,h=c.height;ctx.clearRect(0,0,w,h);const left=70,right=30,top=30,bottom=72,pw=w-left-right,ph=h-top-bottom,max=12;ctx.strokeStyle='#d9e2ec';ctx.lineWidth=1;for(let y=0;y<=12;y+=2){const py=top+ph-(y/max)*ph;ctx.beginPath();ctx.moveTo(left,py);ctx.lineTo(w-right,py);ctx.stroke();ctx.fillStyle='#667085';ctx.font='13px Arial';ctx.fillText(y+'%',25,py+4);}const groups=[['Basso rischio',4.1,3.8],['Alto rischio',10.8,10.2],['Aggregato',esg,trad]];const groupW=pw/groups.length,barW=64;groups.forEach((g,i)=>{const cx=left+groupW*(i+.5),x1=cx-barW-7,x2=cx+7,h1=g[1]/max*ph,h2=g[2]/max*ph;ctx.fillStyle='#147d8d';ctx.fillRect(x1,top+ph-h1,barW,h1);ctx.fillStyle='#6d5bd0';ctx.fillRect(x2,top+ph-h2,barW,h2);ctx.fillStyle='#344054';ctx.font='bold 14px Arial';ctx.textAlign='center';ctx.fillText(g[0],cx,h-34);ctx.font='bold 15px Arial';ctx.fillText(g[1].toFixed(1).replace('.',',')+'%',x1+barW/2,top+ph-h1-8);ctx.fillText(g[2].toFixed(1).replace('.',',')+'%',x2+barW/2,top+ph-h2-8);});ctx.textAlign='left';}
+function updateSimpson(){const e=+esgLow.value,t=+tradLow.value;document.getElementById('esgLowVal').textContent=e+'%';document.getElementById('tradLowVal').textContent=t+'%';const esg=weighted(e,4.1,10.8),trad=weighted(t,3.8,10.2);document.getElementById('esgCount').textContent=Math.round(e*6)+' su 600';document.getElementById('tradCount').textContent=Math.round(t*6)+' su 600';document.getElementById('esgAgg').textContent=esg.toFixed(2).replace('.',',')+'%';document.getElementById('tradAgg').textContent=trad.toFixed(2).replace('.',',')+'%';const paradox=esg<trad;const st=document.getElementById('simpsonStatus');st.className='status '+(paradox?'paradox':'normal');st.textContent=paradox?'Paradosso attivo: ESG migliori nei sottogruppi, ma peggiori nel totale':'Nessun ribaltamento: anche il totale favorisce ESG';drawChart(esg,trad);}
+esgLow.addEventListener('input',updateSimpson);tradLow.addEventListener('input',updateSimpson);document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{esgLow.value=b.dataset.e;tradLow.value=b.dataset.t;updateSimpson();}));updateSimpson();
+
+function setupHeadlineCases(){
+  document.querySelectorAll('.headline-choice').forEach(btn=>btn.addEventListener('click',()=>{
+    const key=btn.dataset.case;
+    document.querySelectorAll(`.headline-choice[data-case="${key}"]`).forEach(x=>x.classList.remove('correct','wrong'));
+    const ok=btn.dataset.ok==='1';
+    btn.classList.add(ok?'correct':'wrong');
+    const fb=document.getElementById(key+'Fb');
+    fb.className='feedback show '+(ok?'ok':'err');
+    fb.textContent=ok?'Esatto. Ora apriamo i dati condizionati e controlliamo se il confronto resta stabile.':'Il calcolo marginale è corretto: cerca invece una caratteristica distribuita in modo molto diverso tra i due gruppi.';
+    if(ok) document.getElementById(key+'Reveal').classList.add('show');
+  }));
+}
+setupHeadlineCases();
+
+const quiz=[
+{q:'Nel caso dei fondi, quale confronto è marginale?',a:['ESG e tradizionali nel totale','ESG e tradizionali tra i fondi a basso rischio','ESG e tradizionali tra i fondi ad alto rischio'],ok:0},
+{q:'Che cosa rappresenta 412/600?',a:['P(ESG | basso rischio)','P(basso rischio | ESG)','Il rendimento dei fondi ESG'],ok:1},
+{q:'Perché il totale può ribaltarsi?',a:['Perché le medie sono sempre errate','Perché i sottogruppi ricevono pesi diversi','Perché le tabelle a doppia entrata non sono utilizzabili'],ok:1},
+{q:'Qual è la variabile confondente nell’esempio principale?',a:['Il numero totale di fondi','Il livello di rischio','Il nome ESG'],ok:1},
+{q:'Nel titolo sullo smart working, quale informazione mancava?',a:['La complessità delle attività','L’età delle aziende','Il numero totale di osservazioni'],ok:0},
+{q:'Nel caso Gen Z–Millennials, che cosa produce il ribaltamento?',a:['Percentuali calcolate male','Una composizione molto diversa per titolo di studio completato','La diversa numerosità totale delle generazioni'],ok:1},
+{q:'Nel caso della mobilità, quale confronto è corretto?',a:['Confrontare soltanto il totale','Confrontare la puntualità anche entro tragitti brevi e lunghi','Eliminare i tragitti lunghi'],ok:1},
+{q:'Il paradosso di Simpson dimostra una relazione causale?',a:['Sì, sempre','No: segnala un problema di aggregazione, ma non basta per la causalità','Solo quando i gruppi sono grandi'],ok:1},
+{q:'Nel project work, quando è sensato disaggregare?',a:['Ogni volta che il risultato non piace','Quando esiste una variabile sostantivamente plausibile e rilevante','Solo con variabili quantitative'],ok:1},
+{q:'Qual è la conclusione più prudente?',a:['Il dato aggregato va sempre ignorato','Il dato disaggregato va sempre preferito','Occorre chiarire la domanda e confrontare risultati marginali e condizionati'],ok:2}
+];
+let qi=0,score=0;const quizBox=document.getElementById('quizBox');
+function renderQuiz(){document.getElementById('quizProgress').style.width=(qi/quiz.length*100)+'%';if(qi>=quiz.length){quizBox.innerHTML=`<div class="card"><div class="card-head light">Risultato</div><div class="card-body"><p class="big">${score}/10</p><p>${score>=8?'Ottimo: sai riconoscere quando l’aggregazione può cambiare la storia.':score>=6?'Buon risultato: rivedi il ruolo dei pesi e delle probabilità condizionate.':'Rivedi le sezioni “Dentro i dati” e “Simpson” prima di riprovare.'}</p></div></div>`;document.getElementById('quizProgress').style.width='100%';return;}const item=quiz[qi];quizBox.innerHTML=`<div class="card"><div class="card-head light">Domanda ${qi+1} di ${quiz.length}</div><div class="card-body"><h3>${item.q}</h3>${item.a.map((x,i)=>`<button class="choice quizchoice" data-i="${i}">${x}</button>`).join('')}<div id="quizFb" class="feedback"></div></div></div>`;document.querySelectorAll('.quizchoice').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.i,ok=i===item.ok;document.querySelectorAll('.quizchoice').forEach(x=>x.disabled=true);b.classList.add(ok?'correct':'wrong');if(!ok)document.querySelectorAll('.quizchoice')[item.ok].classList.add('correct');if(ok)score++;const fb=document.getElementById('quizFb');fb.className='feedback show '+(ok?'ok':'err');fb.innerHTML=(ok?'Risposta corretta. ':'Osserva la risposta evidenziata. ')+`<button class="btn primary" id="nextQuiz" style="margin-left:8px">Continua</button>`;document.getElementById('nextQuiz').onclick=()=>{qi++;renderQuiz();};}));}
+document.getElementById('restartQuiz').onclick=()=>{qi=0;score=0;renderQuiz();};renderQuiz();
+</script>
+
+<footer class="salini-copyright" style="margin:26px auto 8px;max-width:1180px;padding:14px 18px;text-align:center;font-size:12px;line-height:1.45;color:#667085;border-top:1px solid #dce5ef;">© Silvia Salini · Materiale didattico. Tutti i diritti riservati.</footer>
+</body></html>

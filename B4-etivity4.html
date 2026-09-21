@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>E-tivity 4.4 – Correlazione, relazioni non lineari e regressione</title>
+<style>
+:root{--blue:#014082;--blue2:#0260b5;--light:#e8f3ff;--ink:#20242c;--muted:#667085;--orange:#a75c00;--orange2:#fff6e8;--green:#2e7d32;--red:#b42318;--purple:#6d5bd0;--teal:#147d8d;--line:#dce5ef;--soft:#f4f7fb;--card:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--soft);font-family:Arial,"Helvetica Neue",sans-serif;color:var(--ink);font-size:16px}.wrap{max-width:1180px;margin:28px auto;padding:0 16px 55px}.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-radius:12px 12px 0 0;padding:38px 24px 28px;text-align:center;box-shadow:0 7px 20px rgba(1,64,130,.16)}.header .kicker{text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:800;opacity:.82;margin-bottom:9px}.header h1{font-size:32px;line-height:1.2;margin:0 0 7px}.header p{margin:0;font-size:18px;opacity:.95}.meta{background:#fff;border:1px solid var(--line);border-top:0;padding:11px 16px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap}.pill{border:1px solid #cbd9e9;background:#f8fbff;color:var(--blue);padding:7px 11px;border-radius:999px;font-size:14px;font-weight:800}.tabbar{display:flex;overflow-x:auto;background:#fff;border:1px solid var(--line);border-top:0;border-bottom:2px solid var(--blue);scrollbar-width:none}.tabbar::-webkit-scrollbar{display:none}.tab{border:0;border-right:1px solid var(--line);border-bottom:3px solid transparent;background:#fff;color:#697386;padding:12px 10px;min-width:128px;flex:1;font:700 12.5px Arial;cursor:pointer;white-space:nowrap}.tab:hover{background:#f8fbff;color:var(--blue)}.tab.active{background:var(--light);color:var(--blue);border-bottom-color:var(--blue);margin-bottom:-2px}.content{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:27px 30px;box-shadow:0 12px 28px rgba(23,39,64,.08)}.section{display:none}.section.active{display:block}.intro{background:var(--blue);color:#fff;border-radius:11px;padding:19px 22px;margin-bottom:20px}.intro h2{margin:0 0 7px;font-size:22px}.intro p{margin:0;line-height:1.65}.card{background:#fff;border:1px solid #e3e8ef;border-radius:12px;margin-bottom:20px;overflow:hidden}.card-head{padding:14px 19px;font-size:18px;font-weight:800}.card-head.light{background:var(--light);color:var(--blue)}.card-head.dark{background:var(--blue);color:#fff}.card-head.orange{background:var(--orange2);color:#8b4707}.card-body{padding:19px 21px;line-height:1.68}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px}.mini{background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:16px;line-height:1.58}.mini strong{color:var(--blue)}.question{background:var(--orange2);border:2px solid var(--orange);border-radius:12px;padding:18px;margin-bottom:20px}.question h3{color:#8e4c00;margin:0 0 8px}.formula{background:#f0f6ff;border:1px solid #bfd6f2;border-radius:10px;padding:14px 16px;text-align:center;color:var(--blue);font-weight:800;font-size:18px;line-height:1.8;margin:13px 0}.tip,.warn,.okbox{padding:13px 15px;border-radius:0 9px 9px 0;margin:13px 0;line-height:1.62}.tip{background:#f4f9ff;border-left:5px solid var(--blue)}.warn{background:#fff4e5;border-left:5px solid var(--orange)}.okbox{background:#eef8ef;border-left:5px solid var(--green)}.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:15px}.btn{border:0;border-radius:8px;padding:10px 17px;font:800 14px Arial;cursor:pointer;transition:.15s}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#eaf2fb;color:var(--blue)}.btn.orange{background:var(--orange);color:#fff}.btn.active{box-shadow:0 0 0 3px rgba(1,64,130,.18)}.choice{display:block;width:100%;text-align:left;border:1px solid #d6dee8;background:#fff;border-radius:9px;padding:11px 13px;margin:9px 0;cursor:pointer;font:700 15px Arial;color:#344054}.choice:hover{background:#f6faff;border-color:#9ebfe4}.choice.correct{background:#eaf7ec;border-color:#6ab375;color:#1f6a29}.choice.wrong{background:#fff0ef;border-color:#df8078;color:#92231c}.feedback{display:none;padding:12px 14px;border-radius:8px;margin-top:12px}.feedback.show{display:block}.feedback.ok{background:#eef8ef;border:1px solid #b9dfbf;color:#1f6a29}.feedback.err{background:#fff0ef;border:1px solid #f3c3bf;color:#8e2018}.section-nav{display:flex;justify-content:space-between;gap:12px;margin-top:25px;padding-top:17px;border-top:1px solid var(--line)}.controls{background:#fff9f0;border:2px solid var(--orange);border-radius:12px;padding:17px}.control{margin:12px 0}.control label{display:flex;justify-content:space-between;font-weight:800;color:#344054;margin-bottom:7px}.control input[type=range]{width:100%;accent-color:var(--orange)}select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font-weight:700;color:#344054}.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:11px;margin:14px 0}.kpi{background:#f8fbff;border:1px solid #dce9f7;border-radius:10px;padding:12px;text-align:center}.kpi span{display:block;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}.kpi b{display:block;color:var(--blue);font-size:20px;margin-top:5px}.canvas-wrap{background:#fff;border:1px solid #dfe6ee;border-radius:12px;padding:10px;overflow:hidden}.canvas-wrap canvas{width:100%;height:auto;display:block}.legend{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;font-size:13px;color:#475467;margin-top:8px}.dot{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}.toggle{display:flex;gap:8px;flex-wrap:wrap}.toggle button{border:1.5px solid #c7d2df;background:#fff;color:var(--blue);padding:9px 13px;border-radius:999px;font-weight:800;cursor:pointer}.toggle button.active{background:var(--blue);color:#fff;border-color:var(--blue)}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center}th{background:#f3f7fb;color:var(--blue)}.small{font-size:13px;color:var(--muted)}.progress{height:9px;background:#e5eaf0;border-radius:99px;overflow:hidden;margin:10px 0 18px}.progress>div{height:100%;width:0;background:var(--blue);transition:.25s}.checklist label{display:block;padding:10px 0;border-bottom:1px solid #e7edf4}.checklist input{margin-right:9px}@media(max-width:850px){.grid2,.grid3,.hero-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.content{padding:20px 16px}.header h1{font-size:27px}.tab{min-width:145px}}
+.software{background:#0d1724;color:#eef5ff;border-radius:10px;padding:16px;overflow:auto;font-family:"Courier New",monospace;font-size:14px;line-height:1.5}.software table{color:#eef5ff;min-width:720px}.software th,.software td{border-bottom:1px solid #334155;background:transparent;color:#eef5ff;text-align:right}.software th:first-child,.software td:first-child{text-align:left}.assumption-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.assumption{border:1px solid #dce5ef;border-radius:10px;padding:14px;background:#fbfdff}.assumption strong{color:var(--blue)}@media(max-width:850px){.assumption-grid{grid-template-columns:1fr}}.ci-scale{position:relative;height:66px;margin:16px 8px 6px}.ci-axis{position:absolute;left:0;right:0;top:30px;height:2px;background:#aab7c6}.ci-zero{position:absolute;left:12%;top:12px;width:3px;height:38px;background:var(--red)}.ci-segment{position:absolute;left:38%;width:45%;top:24px;height:14px;border-radius:8px;background:var(--blue)}.ci-point{position:absolute;left:60%;top:17px;width:4px;height:28px;background:var(--orange)}.ci-label{position:absolute;top:48px;font-size:12px;color:var(--muted);transform:translateX(-50%)}.definition-list{display:grid;gap:10px}.definition-list div{padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#fbfdff}.definition-list strong{color:var(--blue)}</style>
+</head>
+<body>
+<div class="wrap">
+<header class="header"><div class="kicker">Blocco 4 · E-tivity 4</div><h1>Correlazione, relazioni non lineari e regressione</h1><p>La forma della relazione conta</p></header>
+<div class="meta"><span class="pill">Durata: 60 minuti</span><span class="pill">Diagrammi di dispersione</span><span class="pill">R² e retta di regressione</span><span class="pill">Inferenza, previsione e diagnostica</span></div>
+<nav class="tabbar"><button class="tab active" data-target="s1">1. La nuvola</button><button class="tab" data-target="s2">2. Covarianza e r</button><button class="tab" data-target="s3">3. Il modello</button><button class="tab" data-target="s4">4. R² e forma</button><button class="tab" data-target="s5">5. Ipotesi e inferenza</button><button class="tab" data-target="s5p">6. Previsione e SER</button><button class="tab" data-target="s6">7. Diagnostica</button><button class="tab" data-target="s7">8. Project work</button><button class="tab" data-target="s8">9. Verifica</button></nav>
+<main class="content">
+<section id="s1" class="section active">
+<div class="intro"><h2>Prima di calcolare, guarda la forma</h2><p>Un singolo numero non sostituisce il diagramma di dispersione. Direzione, intensità, forma, gruppi e valori anomali devono essere osservati prima di interpretare R².</p></div>
+<div class="grid2"><div class="controls"><div class="toggle" id="patternButtons"><button class="active" data-pattern="positive">Crescente</button><button data-pattern="negative">Decrescente</button><button data-pattern="none">Nessuna forma</button><button data-pattern="curve">Curva</button><button data-pattern="groups">Due gruppi</button><button data-pattern="outlier">Con outlier</button></div><div class="question" style="margin-top:16px"><h3>Descrivi la nuvola</h3><p>La relazione sembra lineare? È crescente o decrescente?</p><button class="choice patternChoice" data-answer="linear-positive">Lineare e crescente</button><button class="choice patternChoice" data-answer="linear-negative">Lineare e decrescente</button><button class="choice patternChoice" data-answer="nonlinear">Non lineare</button><button class="choice patternChoice" data-answer="none">Non emerge una relazione chiara</button><div id="patternFb" class="feedback"></div></div></div><div><div class="canvas-wrap"><canvas id="patternCanvas" width="900" height="500"></canvas></div><div class="kpis"><div class="kpi"><span>Pendenza</span><b id="patternSlope">—</b></div><div class="kpi"><span>R² lineare</span><b id="patternR2">—</b></div><div class="kpi"><span>Forma</span><b id="patternShape">—</b></div><div class="kpi"><span>Osservazioni</span><b id="patternN">—</b></div></div></div></div>
+<div class="warn"><strong>Attenzione:</strong> un R² basso può indicare assenza di relazione lineare, ma non necessariamente assenza di relazione.</div><div class="section-nav"><span></span><button class="btn primary next" data-next="s2">Continua: covarianza e correlazione →</button></div>
+</section>
+<section id="s2" class="section">
+<div class="intro"><h2>Dalla covarianza alla correlazione</h2><p>La covarianza mostra il segno della variazione congiunta; la correlazione di Pearson la normalizza rispetto alla variabilità di X e Y, rendendo confrontabili relazioni misurate su scale diverse.</p></div>
+<div class="hero-grid"><div><div class="canvas-wrap"><canvas id="covCanvas" width="900" height="520"></canvas></div><div class="legend"><span><i class="dot" style="background:#147d8d"></i>Contributo positivo: quadranti I e III</span><span><i class="dot" style="background:#a75c00"></i>Contributo negativo: quadranti II e IV</span></div><p class="small">Clicca su qualunque punto per vedere il suo contributo alla covarianza.</p></div><div class="card"><div class="card-head light">Il punto selezionato</div><div class="card-body"><div class="formula">(xᵢ − x̄)(yᵢ − ȳ)</div><div class="kpis" style="grid-template-columns:1fr 1fr"><div class="kpi"><span>xᵢ − x̄</span><b id="covDx">—</b></div><div class="kpi"><span>yᵢ − ȳ</span><b id="covDy">—</b></div><div class="kpi"><span>Prodotto</span><b id="covProd">—</b></div><div class="kpi"><span>Contributo</span><b id="covSign">—</b></div></div><div class="tip"><strong>Segni concordi:</strong> quadrante I (+,+) e quadrante III (−,−) danno un prodotto positivo.<br/><strong>Segni discordi:</strong> quadrante II (−,+) e quadrante IV (+,−) danno un prodotto negativo.</div></div></div></div>
+<details><summary style="cursor:pointer;font-weight:800;color:var(--blue)">Approfondisci: formula della covarianza</summary><div><div class="formula">Cov(X,Y) = (1/n) Σ (xᵢ − μ<sub>X</sub>)(yᵢ − μ<sub>Y</sub>)</div><div class="formula">s<sub>XY</sub> = [1/(n−1)] Σ (xᵢ − x̄)(yᵢ − ȳ)</div><p>La prima formula descrive la covarianza della popolazione; la seconda è la covarianza campionaria. La covarianza è positiva quando prevalgono i contributi dei quadranti I e III e negativa quando prevalgono quelli dei quadranti II e IV. Il suo valore, tuttavia, dipende dalle unità di misura di X e Y.</p></div></details>
+
+<div class="card"><div class="card-head orange">Normalizzare la covarianza: la correlazione di Pearson</div><div class="card-body">
+<p>Dividendo la covarianza per il prodotto delle deviazioni standard otteniamo un indice senza unità di misura, sempre compreso tra −1 e +1.</p>
+<div class="grid2"><div class="mini"><strong>Popolazione</strong><div class="formula" style="font-size:17px">ρ = Cov(X,Y)/(σ<sub>X</sub>σ<sub>Y</sub>)</div><p><strong>ρ</strong> è il parametro che descrive la correlazione lineare nella popolazione.</p></div><div class="mini"><strong>Campione</strong><div class="formula" style="font-size:17px">r = s<sub>XY</sub>/(s<sub>X</sub>s<sub>Y</sub>)</div><p><strong>r</strong> è la correlazione osservata nel campione e viene usata per stimare ρ.</p></div></div>
+<div class="formula" style="font-size:15px">r = Σ(xᵢ−x̄)(yᵢ−ȳ) / √[Σ(xᵢ−x̄)² · Σ(yᵢ−ȳ)²]</div>
+<div class="kpis"><div class="kpi"><span>Covarianza campionaria</span><b id="covSample">—</b></div><div class="kpi"><span>Correlazione r</span><b id="corrR">—</b></div><div class="kpi"><span>Intensità lineare</span><b id="corrStrength">—</b></div></div>
+<div class="tip"><strong>Perché non compare n−1 nella formula finale?</strong> Se usiamo la covarianza campionaria e le deviazioni standard campionarie, il fattore 1/(n−1) compare sia al numeratore sia nel prodotto al denominatore e si semplifica. Lo stesso accade usando coerentemente 1/n in tutti e tre i termini. Perciò il valore di r non cambia scegliendo n oppure n−1 in modo coerente.</div>
+<div class="warn"><strong>ρ e r non sono però lo stesso oggetto.</strong> Le formule hanno la stessa struttura, ma ρ è un parametro della popolazione, mentre r è una statistica calcolata sul campione. In generale r non è esattamente uguale a ρ: è una sua stima e cambia da campione a campione.</div>
+<div class="grid3"><div class="mini"><strong>Segno</strong><p>r positivo indica una relazione lineare crescente; r negativo una relazione lineare decrescente.</p></div><div class="mini"><strong>Intensità</strong><p>|r| vicino a 1 indica una forte relazione lineare; |r| vicino a 0 indica una relazione lineare debole.</p></div><div class="mini"><strong>Forma</strong><p>r misura soltanto la linearità: una relazione curva può avere r vicino a zero pur essendo molto forte.</p></div></div>
+<div class="okbox"><strong>Ponte verso la regressione:</strong> nella regressione lineare semplice con intercetta vale <strong>R² = r²</strong>. Il segno della relazione si legge da r o dalla pendenza; elevando r al quadrato, il segno scompare.</div>
+</div></div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s1">← Indietro</button><button class="btn primary next" data-next="s3">Continua: retta e R² →</button></div>
+</section>
+<section id="s3" class="section">
+<div class="intro"><h2>Il modello lineare e i minimi quadrati</h2><p>Distinguiamo il modello teorico dai coefficienti stimati sui dati. La retta dei minimi quadrati sceglie le stime che rendono complessivamente più piccoli i residui verticali.</p></div>
+<div class="formula">Yᵢ = β₀ + β₁Xᵢ + εᵢ &nbsp;&nbsp;&nbsp; → &nbsp;&nbsp;&nbsp; ŷᵢ = β̂₀ + β̂₁xᵢ</div>
+<div class="grid2"><div class="controls"><div class="control"><label>Pendenza teorica β₁ <span id="regSlopeVal">2,0</span></label><input id="regSlope" type="range" min="-4" max="4" step="0.25" value="2"/></div><div class="control"><label>Variabilità casuale <span id="regNoiseVal">2,0</span></label><input id="regNoise" type="range" min="0" max="8" step="0.5" value="2"/></div><div class="control"><label>Unità di Y</label><select id="regUnit"><option value="1">migliaia di euro</option><option value="1000">euro</option></select></div><div class="tip"><strong>Esempio:</strong> X è l'investimento pubblicitario in migliaia di euro; Y sono le vendite incrementali.</div></div><div><div class="canvas-wrap"><canvas id="regCanvas" width="900" height="500"></canvas></div><div class="kpis"><div class="kpi"><span>Intercetta β̂₀</span><b id="regB0">—</b></div><div class="kpi"><span>Pendenza β̂₁</span><b id="regB1">—</b></div><div class="kpi"><span>R²</span><b id="regR2">—</b></div><div class="kpi"><span>Unità di Y</span><b id="regUnitKpi">—</b></div></div></div></div>
+<div class="card"><div class="card-head dark">Il metodo dei minimi quadrati</div><div class="card-body"><div class="grid2"><div><p>Il <strong>residuo</strong> misura la distanza verticale tra il valore osservato e quello previsto:</p><div class="formula">eᵢ = yᵢ − ŷᵢ</div><p>La retta stimata sceglie β̂₀ e β̂₁ minimizzando la <strong>somma dei quadrati degli errori (o residui)</strong>, indicata con <strong>SSE</strong>:</p><div class="formula">SSE = Σ[yᵢ − (β₀ + β₁xᵢ)]² = Σeᵢ²</div><div class="control"><label>Intercetta candidata <span id="trialB0Val">0,00</span></label><input id="trialB0" type="range" min="-2" max="12" step="0.1" value="0"/></div><div class="control"><label>Pendenza candidata <span id="trialB1Val">1,00</span></label><input id="trialB1" type="range" min="0" max="4" step="0.05" value="1"/></div><button id="useOLS" class="btn primary">Mostra il minimo</button></div><div><div class="canvas-wrap"><canvas id="olsCanvas" width="900" height="500"></canvas></div><div class="legend"><span><i class="dot" style="background:#6d5bd0"></i>Retta candidata e residui</span><span><i class="dot" style="background:#a75c00"></i>Retta dei minimi quadrati</span></div><div class="kpis"><div class="kpi"><span>SSE candidata</span><b id="trialSSE">—</b></div><div class="kpi"><span>SSE minima</span><b id="minSSE">—</b></div><div class="kpi"><span>β̂₀</span><b id="olsB0">—</b></div><div class="kpi"><span>β̂₁</span><b id="olsB1">—</b></div></div></div></div>
+<div class="grid2" style="margin-top:16px"><div class="mini"><strong>Stime dei coefficienti</strong><div class="formula" style="font-size:15px">β̂₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)²<br/>β̂₀ = ȳ − β̂₁x̄</div></div><div class="mini"><strong>Interpretazione</strong><p><b>β̂₁</b> è la variazione media prevista di Y quando X aumenta di un'unità. <b>β̂₀</b> è il valore previsto per X=0 e va interpretato solo quando X=0 è plausibile nel contesto osservato.</p></div></div>
+
+<details><summary style="cursor:pointer;font-weight:800;color:var(--blue)">Approfondimento matematico facoltativo: derivazione delle stime OLS</summary><div>
+<p>La retta dei minimi quadrati è quella che sceglie intercetta e pendenza in modo da minimizzare la funzione:</p>
+<div class="formula" style="font-size:16px">SSE(b₀,b₁) = Σ[yᵢ − (b₀ + b₁xᵢ)]²</div>
+<p>Qui <b>b₀</b> e <b>b₁</b> sono valori candidati. Per trovare il punto di minimo calcoliamo le derivate parziali e le poniamo uguali a zero:</p>
+<div class="formula" style="font-size:15px">∂SSE/∂b₀ = −2Σ(yᵢ−b₀−b₁xᵢ) = 0<br/>∂SSE/∂b₁ = −2Σxᵢ(yᵢ−b₀−b₁xᵢ) = 0</div>
+<p>Si ottengono così le <strong>equazioni normali</strong>:</p>
+<div class="formula" style="font-size:15px">nb₀ + b₁Σxᵢ = Σyᵢ<br/>b₀Σxᵢ + b₁Σxᵢ² = Σxᵢyᵢ</div>
+<p>Dalla prima equazione ricaviamo <b>b₀ = ȳ − b₁x̄</b>. Sostituendo nella seconda e semplificando:</p>
+<div class="formula" style="font-size:15px">β̂₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)²<br/>β̂₀ = ȳ − β̂₁x̄</div>
+<div class="tip"><strong>Perché è davvero un minimo?</strong> La matrice delle derivate seconde è:<div class="formula" style="font-size:14px">H = 2 [[n, Σxᵢ], [Σxᵢ, Σxᵢ²]]<br/>det(H) = 4nΣ(xᵢ−x̄)²</div>Se X presenta variabilità, Σ(xᵢ−x̄)² &gt; 0: la matrice H è positiva definita, la funzione SSE è strettamente convessa e la soluzione trovata è l'unico minimo globale.</div>
+<p class="small"><strong>Collegamento con la matematica:</strong> il procedimento usa una funzione di due variabili, derivate parziali e un sistema di due equazioni. La stessa idea si estende alla regressione multipla mediante il calcolo matriciale.</p>
+</div></details>
+
+<div class="definition-list">
+<div><strong>SST – Total Sum of Squares:</strong> Σ(yᵢ − ȳ)², la variabilità complessiva osservata di Y.</div>
+<div><strong>SSR – Regression Sum of Squares:</strong> Σ(ŷᵢ − ȳ)², la parte della variabilità descritta dalla retta.</div>
+<div><strong>SSE – Error Sum of Squares:</strong> Σ(yᵢ − ŷᵢ)² = Σeᵢ², la parte rimasta nei residui.</div>
+</div>
+<div class="tip"><strong>Perché sigle inglesi?</strong> SST, SSR e SSE derivano da <em>Sum of Squares</em> e sono molto frequenti nei manuali e negli output statistici. Molti software mostrano semplicemente una colonna chiamata <em>Sum Sq</em>, distinguendo le righe del modello e dei residui. <strong>Attenzione:</strong> la notazione non è completamente uniforme; in alcune fonti SSR indica <em>sum of squared residuals</em>, cioè ciò che qui chiamiamo SSE. Occorre quindi controllare sempre la definizione associata alla sigla.</div>
+<div class="formula">SST = SSR + SSE &nbsp;&nbsp;&nbsp; R² = SSR/SST = 1 − SSE/SST</div><p class="small">Nella regressione OLS con intercetta, la variabilità totale si scompone nella parte descritta dal modello e nella parte residua. R² confronta la variabilità descritta dalla regressione con la variabilità totale di Y.</p></div></div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s2">← Indietro</button><button class="btn primary next" data-next="s4">Continua: R² e forma →</button></div>
+</section>
+<section id="s4" class="section">
+<div class="intro"><h2>R² descrive la retta, non qualunque relazione</h2><p>La pendenza misura l'effetto nelle unità delle variabili; R² misura la capacità descrittiva del modello scelto. La forma del legame resta decisiva.</p></div>
+<div class="card"><div class="card-head light">Stesso R², effetti economici diversi</div><div class="card-body"><div class="grid2"><div class="table-wrap"><table><thead><tr><th>Investimento<br/>(migliaia €)</th><th>Strategia A<br/>(migliaia €)</th><th>Strategia B<br/>(migliaia €)</th></tr></thead><tbody><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>2</td><td>4</td><td>6</td></tr><tr><td>3</td><td>6</td><td>9</td></tr><tr><td>4</td><td>8</td><td>12</td></tr><tr><td>5</td><td>10</td><td>15</td></tr></tbody></table></div><div class="canvas-wrap"><canvas id="twoLinesCanvas" width="900" height="500"></canvas></div></div><div class="kpis"><div class="kpi"><span>R² strategia A</span><b>1,00</b></div><div class="kpi"><span>R² strategia B</span><b>1,00</b></div><div class="kpi"><span>β̂₁ A</span><b>2</b></div><div class="kpi"><span>β̂₁ B</span><b>3</b></div></div><div class="question"><h3>Quale affermazione è corretta?</h3><button class="choice qSame" data-ok="0">La strategia B ha R² maggiore perché la sua retta è più ripida.</button><button class="choice qSame" data-ok="1">Le strategie hanno lo stesso R², ma la strategia B ha una pendenza maggiore.</button><button class="choice qSame" data-ok="0">Pendenza e R² misurano la stessa caratteristica.</button><div id="sameFb" class="feedback"></div></div></div></div>
+<div class="grid2"><div class="card"><div class="card-head orange">Una relazione non lineare</div><div class="card-body"><p>Uno sconto moderato può aumentare il profitto; uno sconto eccessivo riduce il margine. La relazione è una <strong>parabola rovesciata</strong>, descritta da un modello quadratico.</p><div class="table-wrap"><table><thead><tr><th>Sconto</th><th>Profitto<br/>(migliaia €)</th></tr></thead><tbody id="discountRows"></tbody></table></div><div class="control"><label>Sconto ottimale <span id="optDiscountVal">20%</span></label><input id="optDiscount" type="range" min="10" max="30" step="5" value="20"/></div><div class="formula">ŷ = β̂₀ + β̂₁x + β̂₂x²</div></div></div><div><div class="canvas-wrap"><canvas id="curveCanvas" width="900" height="500"></canvas></div><div class="kpis"><div class="kpi"><span>R² lineare</span><b id="curveLinR2">—</b></div><div class="kpi"><span>R² quadratico</span><b id="curveQuadR2">—</b></div><div class="kpi"><span>β̂₁ lineare</span><b id="curveSlope">—</b></div><div class="kpi"><span>Forma</span><b>Parabola</b></div></div></div></div>
+<div class="warn"><strong>Conclusione:</strong> un R² lineare basso non implica assenza di relazione. Può indicare che la retta è il modello sbagliato.</div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s3">← Indietro</button><button class="btn primary next" data-next="s5">Continua: inferenza sui coefficienti →</button></div>
+</section>
+<section id="s5" class="section">
+<div class="intro"><h2>Prima le ipotesi, poi inferenza e previsione</h2><p>Standard error, test t, p-value, intervalli di confidenza e previsioni sono interpretabili solo dopo avere esplicitato il modello e le condizioni che ne rendono valido l'uso.</p></div>
+
+<div class="card"><div class="card-head light">Il modello di regressione lineare semplice</div><div class="card-body">
+<div class="formula">Yᵢ = β₀ + β₁Xᵢ + εᵢ</div>
+<p>Il termine <strong>εᵢ</strong> raccoglie tutti i fattori non inclusi nella retta che fanno deviare l'osservazione dalla media condizionata di Y.</p>
+<div class="assumption-grid">
+  <div class="assumption"><strong>Forma lineare corretta</strong><p>La media condizionata è E(Y|X)=β₀+β₁X. Se la relazione è curva, il modello deve essere modificato.</p></div>
+  <div class="assumption"><strong>Osservazioni indipendenti</strong><p>Il campione è casuale e gli errori di unità diverse non dipendono sistematicamente tra loro.</p></div>
+  <div class="assumption"><strong>Variabilità di X</strong><p>I valori di X non sono tutti uguali: senza variabilità del regressore non è possibile stimare β₁.</p></div>
+  <div class="assumption"><strong>Media condizionata nulla</strong><p>E(ε|X)=0: i fattori omessi non devono variare sistematicamente con X. È la condizione chiave per interpretare β̂₁ come stima non distorta.</p></div>
+  <div class="assumption"><strong>Omoschedasticità</strong><p>Var(ε|X)=σ²: la dispersione degli errori è costante. Questa ipotesi sostiene gli standard error classici.</p></div>
+  <div class="assumption"><strong>Normalità condizionata degli errori</strong><p>ε|X ~ N(0,σ²). Nei piccoli campioni rende esatti i test t, i test F e gli intervalli di confidenza usuali.</p></div>
+</div>
+<div class="warn"><strong>Diagnostica:</strong> linearità, variabilità costante e assenza di osservazioni eccessivamente influenti devono essere controllate sui dati e sui residui. La sezione successiva mostra perché un solo punto può cambiare la retta.</div>
+</div></div>
+
+<div class="card"><div class="card-head dark">Esempio: pubblicità e vendite incrementali</div><div class="card-body">
+<p>Su <strong>30 campagne</strong> si studia la relazione tra investimento pubblicitario X, espresso in migliaia di euro, e vendite incrementali Y, anch'esse in migliaia di euro.</p>
+<div class="formula">Retta stimata: ŷ = 11,84 + 2,36x</div>
+<div class="table-wrap"><table>
+<thead><tr><th>Termine</th><th>Stima</th><th>Errore standard</th><th>t</th><th>p-value</th><th>IC 95%</th></tr></thead>
+<tbody>
+<tr><td>Intercetta β₀</td><td>11,84</td><td>2,75</td><td>4,31</td><td>0,0002</td><td>[6,21; 17,47]</td></tr>
+<tr><td>Investimento β₁</td><td>2,36</td><td>0,31</td><td>7,61</td><td>&lt; 0,0001</td><td>[1,73; 2,99]</td></tr>
+</tbody></table></div>
+<div class="grid3" style="margin-top:16px">
+  <div class="mini"><strong>Stima di β₁</strong><p>A un aumento di 1.000 € dell'investimento è associato, in media, un aumento previsto di 2.360 € delle vendite incrementali.</p></div>
+  <div class="mini"><strong>Errore standard</strong><p>0,31 misura l'incertezza campionaria della stima 2,36: campioni diversi produrrebbero pendenze leggermente diverse.</p></div>
+  <div class="mini"><strong>Test della pendenza</strong><p>Per H₀:β₁=0, t=2,36/0,31=7,61. Il p-value molto piccolo indica forte incompatibilità dei dati con una pendenza nulla.</p></div>
+</div>
+<div class="ci-scale"><div class="ci-axis"></div><div class="ci-zero"></div><div class="ci-segment"></div><div class="ci-point"></div><span class="ci-label" style="left:12%">0</span><span class="ci-label" style="left:38%">1,73</span><span class="ci-label" style="left:60%">2,36</span><span class="ci-label" style="left:83%">2,99</span></div>
+<div class="okbox"><strong>Intervallo di confidenza:</strong> i valori plausibili per β₁ sono compresi tra 1,73 e 2,99. Poiché 0 non appartiene all'intervallo, il test bilaterale al 5% rifiuta H₀:β₁=0.</div>
+</div></div>
+
+<div class="card"><div class="card-head orange">Scomposizione della variabilità e test complessivo</div><div class="card-body">
+<div class="table-wrap"><table>
+<thead><tr><th>Fonte</th><th>Somma dei quadrati</th><th>g.d.l.</th><th>Media quadratica</th><th>F</th><th>p-value</th></tr></thead>
+<tbody>
+<tr><td>Regressione (SSR)</td><td>2.154,1</td><td>1</td><td>2.154,1</td><td>57,89</td><td>&lt; 0,0001</td></tr>
+<tr><td>Errori/residui (SSE)</td><td>1.041,9</td><td>28</td><td>37,21</td><td>—</td><td>—</td></tr>
+<tr><td>Totale (SST)</td><td>3.196,0</td><td>29</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<div class="formula">SST = SSR + SSE &nbsp;&nbsp;&nbsp; R² = 2.154,1 / 3.196,0 = 0,674</div>
+<p>Il modello lineare descrive il <strong>67,4%</strong> della variabilità osservata delle vendite incrementali. La media quadratica degli errori è 37,21 e la sua radice quadrata fornisce l'errore standard residuo:</p>
+<div class="formula">σ̂ = √37,21 = 6,10 &nbsp; migliaia di euro</div>
+<p class="small">Nella regressione lineare semplice il test F complessivo coincide con il quadrato del test t sulla pendenza: 7,61² ≈ 57,89.</p>
+</div></div>
+
+
+<div class="question"><h3>Come va letto il p-value di β̂₁?</h3>
+<button class="choice qInf" data-ok="0">È la probabilità che β₁ sia uguale a zero.</button>
+<button class="choice qInf" data-ok="1">Assumendo H₀:β₁=0 e le ipotesi del modello, è la probabilità di ottenere una statistica t almeno altrettanto estrema.</button>
+<button class="choice qInf" data-ok="0">È la quota di variabilità di Y descritta dalla retta.</button>
+<div id="infFb" class="feedback"></div></div>
+
+<details><summary style="cursor:pointer;font-weight:800;color:var(--blue)">Approfondimento: piccoli campioni, normalità e grandi campioni</summary><div>
+<p><strong>Piccoli campioni.</strong> Se gli errori sono condizionatamente normali, ε|X ~ N(0,σ²), gli stimatori dei minimi quadrati hanno una distribuzione normale condizionata ai valori di X. Sostituendo σ con la sua stima, le statistiche sui coefficienti seguono esattamente una distribuzione t con n−2 gradi di libertà. In questo quadro i test e gli intervalli usuali sono esatti.</p>
+<p><strong>Massima verosimiglianza.</strong> Sotto normalità e omoschedasticità, le stime di β₀ e β₁ ottenute con i minimi quadrati coincidono con le stime di massima verosimiglianza.</p>
+<p><strong>Grandi campioni.</strong> Anche senza normalità esatta degli errori, sotto opportune condizioni di regolarità e con momenti finiti, gli stimatori OLS sono asintoticamente normali. L'inferenza t diventa allora un'approssimazione. In presenza di eteroschedasticità si devono usare errori standard robusti, non quelli classici della tabella.</p>
+<p><strong>Precisazione.</strong> Non si assume la normalità marginale di X. Per l'inferenza esatta in piccoli campioni, la richiesta riguarda la distribuzione di Y condizionata a X, cioè la normalità degli errori.</p>
+</div></details>
+
+<div class="section-nav"><button class="btn secondary prev" data-prev="s4">← Indietro</button><button class="btn primary next" data-next="s5p">Continua: previsione e SER →</button></div>
+</section>
+
+<section id="s5p" class="section">
+<div class="intro">
+  <h2>Dal modello interpretativo al modello predittivo</h2>
+  <p>La regressione non serve soltanto a interpretare una relazione. Può anche essere utilizzata per prevedere un nuovo valore di Y e per quantificare l'incertezza della previsione attraverso il SER.</p>
+</div>
+
+<div class="okbox"><strong>Nuova sezione:</strong> usa il cursore per scegliere un investimento futuro e confronta la previsione puntuale, l'intervallo per la risposta media e l'intervallo di previsione per una singola nuova campagna.</div>
+
+<div class="card"><div class="card-head light">Dal modello interpretativo al modello predittivo</div><div class="card-body">
+
+<div class="grid2">
+  <div class="mini">
+    <strong>Uso interpretativo</strong>
+    <p>Il modello serve a comprendere la relazione: il segno e la dimensione di β̂₁ descrivono come varia, in media, Y al variare di X. Test e intervalli di confidenza quantificano l'incertezza sui coefficienti.</p>
+  </div>
+  <div class="mini">
+    <strong>Uso predittivo</strong>
+    <p>Il modello può anche essere usato per stimare un esito futuro. Per un nuovo valore x₀ inseriamo x₀ nella retta stimata:</p>
+    <div class="formula" style="font-size:16px">ŷ₀ = β̂₀ + β̂₁x₀</div>
+  </div>
+</div>
+
+<div class="formula">SER = √[SSE/(n−2)] = √(1.041,9/28) = 6,10 migliaia di euro</div>
+
+<div class="grid3">
+  <div class="mini"><strong>SER</strong><p>Il <strong>Standard Error of the Regression</strong>, o errore standard residuo, misura la distanza verticale tipica tra valori osservati e valori stimati dalla retta. È espresso nelle stesse unità di Y.</p></div>
+  <div class="mini"><strong>Non è SE(β̂₁)</strong><p>SE(β̂₁)=0,31 misura l'incertezza sulla pendenza. Il SER=6,10 misura invece la dispersione degli esiti attorno alla retta e quindi è direttamente collegato alla precisione delle previsioni.</p></div>
+  <div class="mini"><strong>R² e SER</strong><p>R² è una misura relativa e senza unità; il SER è una misura assoluta. Due modelli possono avere R² simili ma errori predittivi molto diversi nelle unità operative del problema.</p></div>
+</div>
+
+<div class="grid2" style="margin-top:16px">
+  <div class="controls">
+    <div class="control">
+      <label>Nuovo investimento x₀ <span id="predXVal">10,0</span> migliaia €</label>
+      <input id="predX" type="range" min="0" max="20" step="0.5" value="10"/>
+    </div>
+    <div class="kpis" style="grid-template-columns:1fr 1fr">
+      <div class="kpi"><span>Previsione puntuale</span><b id="predY">35,44</b></div>
+      <div class="kpi"><span>SER</span><b>6,10</b></div>
+      <div class="kpi"><span>IC 95% della media</span><b id="predMeanCI">—</b></div>
+      <div class="kpi"><span>IP 95% nuovo caso</span><b id="predIndividualPI">—</b></div>
+      <div class="kpi"><span>Semi-ampiezza IC</span><b id="predMeanMargin">—</b></div>
+      <div class="kpi"><span>Semi-ampiezza IP</span><b id="predPredictionMargin">—</b></div>
+    </div>
+    <div id="predRangeNote" class="tip"><strong>Interpolazione:</strong> x₀ è compreso nel campo degli investimenti osservati nell'esercizio.</div>
+  </div>
+
+  <div>
+    <div class="chartbox"><canvas id="predictionCanvas" width="900" height="500"></canvas></div>
+    <div class="legend">
+      <span><i style="background:#0260b5"></i>IC per la risposta media</span>
+      <span><i style="background:#a75c00"></i>Intervallo di previsione individuale</span>
+      <span><i style="background:#2e7d32"></i>Previsione puntuale</span>
+    </div>
+    <div class="small" style="margin-top:8px;text-align:center"><strong>Scala fissa:</strong> spostando il cursore, il punto verde e i due intervalli si muovono lungo lo stesso asse.</div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-head light">Come cambia l'ampiezza?</div>
+      <div class="card-body">
+        <div class="chartbox"><canvas id="predictionWidthCanvas" width="900" height="430"></canvas></div>
+        <div class="legend">
+          <span><i style="background:#0260b5"></i>Semi-ampiezza IC della media</span>
+          <span><i style="background:#a75c00"></i>Semi-ampiezza IP del nuovo caso</span>
+        </div>
+        <div class="small" style="margin-top:8px"><strong>Qui l'asse verticale rappresenta direttamente la semi-ampiezza.</strong> L'intervallo è più stretto vicino a x̄=8,1 e si allarga allontanandosi dal centro dei dati.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tip"><strong>L'ampiezza non è costante.</strong> È minima vicino a x̄=8,1 e aumenta quando x₀ si allontana dal centro dei dati. Nel grafico principale questa variazione può sembrare piccola perché l'intervallo di previsione individuale è dominato dal SER; il secondo grafico mostra direttamente come cambiano le semi-ampiezze.</div>
+<div class="tip"><strong>Perché l'intervallo di previsione è più ampio?</strong> L'intervallo per la risposta media considera l'incertezza nel posizionare la retta. La previsione di una singola nuova campagna deve includere anche la variabilità individuale attorno alla retta, rappresentata dal SER.</div>
+
+<details><summary style="cursor:pointer;font-weight:800;color:var(--blue)">Approfondimento: intervallo per la media e intervallo di previsione</summary><div>
+<p>Per un valore x₀, l'intervallo di confidenza della risposta media usa:</p>
+<div class="formula" style="font-size:15px">ŷ₀ ± t × SER × √[1/n + (x₀−x̄)²/Σ(xᵢ−x̄)²]</div>
+<p>Per una singola osservazione futura si aggiunge la variabilità del nuovo errore:</p>
+<div class="formula" style="font-size:15px">ŷ₀ ± t × SER × √[1 + 1/n + (x₀−x̄)²/Σ(xᵢ−x̄)²]</div>
+<p>Il termine aggiuntivo 1 rende l'intervallo di previsione individuale sempre più ampio.</p>
+</div></details>
+
+<div class="warn"><strong>Ponte verso i modelli predittivi successivi:</strong> il SER descrive l'errore all'interno del campione usato per stimare la retta. Quando l'obiettivo principale diventa prevedere nuovi casi, i modelli devono essere confrontati anche su dati non usati nella stima, mediante un campione di test o la cross-validation. Non basta scegliere il modello con più coefficienti significativi o con R² più alto.</div>
+
+</div></div>
+
+<div class="section-nav">
+  <button class="btn secondary prev" data-prev="s5">← Indietro</button>
+  <button class="btn primary next" data-next="s6">Continua: diagnostica e punti influenti →</button>
+</div>
+</section>
+
+<section id="s6" class="section">
+<div class="intro"><h2>Dopo l'output: diagnostica e punti influenti</h2><p>Le ipotesi sono state enunciate prima dell'inferenza. Ora controlliamo se i dati e i residui mostrano deviazioni che possono rendere la retta o i suoi standard error poco affidabili.</p></div>
+<div class="grid3"><div class="mini"><strong>Forma dei residui</strong><p>Un andamento curvo dei residui segnala che la relazione lineare non è adeguata.</p></div><div class="mini"><strong>Dispersione dei residui</strong><p>Una forma a imbuto suggerisce varianza non costante e richiede una revisione del modello o standard error robusti.</p></div><div class="mini"><strong>Osservazioni anomale</strong><p>Valori estremi in X o Y devono essere esaminati: sono influenti soprattutto quando combinano alta leva e grande residuo.</p></div></div>
+<div class="card" style="margin-top:20px"><div class="card-head orange">Confronta due punti estremi</div><div class="card-body"><div class="tip"><strong>Richiamo dalla lezione sul rumore:</strong> qui il <em>rumore</em> rappresenta la componente casuale che fa disperdere i punti attorno alla relazione sistematica, cioè il ruolo svolto dal termine ε nel modello. Aumentando il cursore “Rumore” rendiamo più grande questa variabilità casuale, senza cambiare intenzionalmente la componente lineare.</div><div class="grid2"><div class="controls"><div class="control"><label>Componente lineare <span id="exSlopeVal">1,5</span></label><input id="exSlope" type="range" min="-3" max="3" step="0.25" value="1.5"/></div><div class="control"><label>Curvatura <span id="exCurveVal">0,0</span></label><input id="exCurve" type="range" min="-1.5" max="1.5" step="0.1" value="0"/></div><div class="control"><label>Rumore (richiamo dalla lezione) <span id="exNoiseVal">2,0</span></label><input id="exNoise" type="range" min="0" max="8" step="0.5" value="2"/></div><div class="control"><label>Scala di Y <span id="exScaleVal">1×</span></label><input id="exScale" type="range" min="1" max="1000" step="999" value="1"/></div><p><strong>Scegli il tipo di punto:</strong></p><div class="toggle" id="outlierButtons"><button class="active" data-mode="none">Nessun punto</button><button data-mode="influential">Outlier influente</button><button data-mode="leverage">Estremo in X sulla retta</button></div><div class="btn-row"><button id="newNoise" class="btn secondary">Nuova estrazione</button></div></div><div><div class="canvas-wrap"><canvas id="exploreCanvas" width="900" height="500"></canvas></div><div class="legend"><span style="border-top:3px dashed #7a8699;width:28px"></span>Retta prima del punto<span style="border-top:3px solid #a75c00;width:28px"></span>Retta dopo il punto<span><i class="dot" style="background:#b42318"></i>Influente</span><span><i class="dot" style="background:#6d5bd0"></i>Estremo in X sulla retta</span></div><div class="kpis"><div class="kpi"><span>β̂₀ attuale</span><b id="exB0">—</b></div><div class="kpi"><span>β̂₁ attuale</span><b id="exB1">—</b></div><div class="kpi"><span>R²</span><b id="exR2">—</b></div><div class="kpi"><span>Δβ̂₁</span><b id="exDeltaB1">—</b></div><div class="kpi"><span>Tipo</span><b id="exOutlier">Nessuno</b></div></div></div></div>
+<div class="grid3" style="margin-top:16px"><div class="mini"><strong>Outlier influente</strong><p>È lontano in X e dalla retta: la nuova retta ruota in modo evidente.</p></div><div class="mini"><strong>Estremo univariato in X</strong><p>È ad alta leva, ma collocato sulla retta originaria. Per costruzione non altera β̂₀ e β̂₁.</p></div><div class="mini"><strong>Anomalo ≠ influente</strong><p>L'influenza dipende insieme dalla leva e dal residuo.</p></div></div></div></div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s5p">← Indietro</button><button class="btn primary next" data-next="s7">Continua: project work →</button></div>
+</section>
+<section id="s7" class="section">
+<div class="intro"><h2>Una lettura completa per il project work</h2><p>Un output di regressione non si commenta riga per riga senza prima verificare forma, ipotesi e significato sostantivo delle variabili.</p></div>
+<div class="grid2"><div class="card"><div class="card-head light">Checklist</div><div class="card-body checklist"><label><input type="checkbox"/> Ho osservato il diagramma di dispersione?</label><label><input type="checkbox"/> La forma lineare è adeguata?</label><label><input type="checkbox"/> Ho interpretato β̂₁ nelle unità corrette?</label><label><input type="checkbox"/> Ho distinto grandezza dell'effetto e significatività statistica?</label><label><input type="checkbox"/> Ho letto standard error, t, p-value e intervallo di confidenza?</label><label><input type="checkbox"/> Ho controllato residui, omoschedasticità e osservazioni influenti?</label><label><input type="checkbox"/> Sto evitando di confondere associazione e causalità?</label></div></div><div class="card"><div class="card-head orange">Ordine consigliato del commento</div><div class="card-body"><div class="mini"><strong>1. Forma</strong><p>Descrivi la nuvola e giustifica la scelta del modello.</p></div><div class="mini" style="margin-top:10px"><strong>2. Coefficienti</strong><p>Interpreta segno e grandezza di β̂₁ nelle unità reali.</p></div><div class="mini" style="margin-top:10px"><strong>3. Inferenza</strong><p>Commenta incertezza, t, p-value e intervallo di confidenza.</p></div><div class="mini" style="margin-top:10px"><strong>4. Adattamento e diagnostica</strong><p>Valuta R², residui e punti influenti.</p></div><div class="mini" style="margin-top:10px"><strong>5. Previsione</strong><p>Se l’obiettivo è predittivo, riporta SER, previsione puntuale e intervallo di previsione; evita estrapolazioni non giustificate.</p></div></div></div></div>
+<div class="warn"><strong>Non basta scrivere:</strong> “il coefficiente è significativo”. Occorre dire quanto vale, in quali unità, con quale incertezza e se il modello è plausibile.</div>
+<div class="section-nav"><button class="btn secondary prev" data-prev="s6">← Indietro</button><button class="btn primary next" data-next="s8">Vai alla verifica →</button></div>
+</section>
+<section id="s8" class="section"><div class="intro"><h2>Verifica finale</h2><p>Undici domande su forma, covarianza, correlazione, minimi quadrati, R², inferenza, previsione, SER e diagnostica della regressione.</p></div><div class="progress"><div id="quizProgress"></div></div><div id="quizBox"></div><div class="section-nav"><button class="btn secondary prev" data-prev="s7">← Indietro</button><button class="btn primary" id="restartQuiz">Ricomincia</button></div></section>
+</main></div>
+<script>
+const fmt=(x,d=2)=>Number(x).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sections=[...document.querySelectorAll('.section')],tabs=[...document.querySelectorAll('.tab')];function showSection(id){sections.forEach(s=>s.classList.toggle('active',s.id===id));tabs.forEach(t=>t.classList.toggle('active',t.dataset.target===id));window.scrollTo({top:0,behavior:'smooth'})}tabs.forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.target)));document.querySelectorAll('.next').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.next)));document.querySelectorAll('.prev').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.prev)));
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length}function regression(points){const xs=points.map(p=>p.x),ys=points.map(p=>p.y),mx=mean(xs),my=mean(ys);let sxx=0,sxy=0;for(const p of points){sxx+=(p.x-mx)**2;sxy+=(p.x-mx)*(p.y-my)}const b1=sxx===0?0:sxy/sxx,b0=my-b1*mx;let sst=0,sse=0;for(const p of points){const yh=b0+b1*p.x;sst+=(p.y-my)**2;sse+=(p.y-yh)**2}return{b0,b1,r2:sst===0?1:Math.max(0,1-sse/sst),mx,my}}
+function solve3(A,b){const M=A.map((r,i)=>[...r,b[i]]);for(let i=0;i<3;i++){let m=i;for(let j=i+1;j<3;j++)if(Math.abs(M[j][i])>Math.abs(M[m][i]))m=j;[M[i],M[m]]=[M[m],M[i]];const piv=M[i][i]||1e-12;for(let k=i;k<4;k++)M[i][k]/=piv;for(let j=0;j<3;j++)if(j!==i){const f=M[j][i];for(let k=i;k<4;k++)M[j][k]-=f*M[i][k]}}return[M[0][3],M[1][3],M[2][3]]}
+function quadraticFit(points){let n=points.length,sx=0,sx2=0,sx3=0,sx4=0,sy=0,sxy=0,sx2y=0;for(const p of points){const x=p.x,y=p.y,x2=x*x;sx+=x;sx2+=x2;sx3+=x2*x;sx4+=x2*x2;sy+=y;sxy+=x*y;sx2y+=x2*y}const[a,b,c]=solve3([[n,sx,sx2],[sx,sx2,sx3],[sx2,sx3,sx4]],[sy,sxy,sx2y]);const my=sy/n;let sst=0,sse=0;for(const p of points){const yh=a+b*p.x+c*p.x*p.x;sst+=(p.y-my)**2;sse+=(p.y-yh)**2}return{a,b,c,r2:sst===0?1:Math.max(0,1-sse/sst)}}
+function bounds(points,pad=.12){let xs=points.map(p=>p.x),ys=points.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),dx=(xmax-xmin)||1,dy=(ymax-ymin)||1;return{xmin:xmin-dx*pad,xmax:xmax+dx*pad,ymin:ymin-dy*pad,ymax:ymax+dy*pad}}
+function drawScatter(canvas,points,opts={}){const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);const L=70,R=25,T=25,B=55,b=opts.bounds||bounds(points),X=x=>L+(x-b.xmin)/(b.xmax-b.xmin)*(w-L-R),Y=y=>T+(b.ymax-y)/(b.ymax-b.ymin)*(h-T-B);ctx.strokeStyle='#d9e2ec';ctx.lineWidth=1;for(let i=0;i<=5;i++){const px=L+i*(w-L-R)/5,py=T+i*(h-T-B)/5;ctx.beginPath();ctx.moveTo(px,T);ctx.lineTo(px,h-B);ctx.stroke();ctx.beginPath();ctx.moveTo(L,py);ctx.lineTo(w-R,py);ctx.stroke()}ctx.strokeStyle='#344054';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(L,h-B);ctx.lineTo(w-R,h-B);ctx.stroke();ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.stroke();ctx.fillStyle='#667085';ctx.font='13px Arial';for(let i=0;i<=5;i++){const xv=b.xmin+i*(b.xmax-b.xmin)/5,yv=b.ymax-i*(b.ymax-b.ymin)/5;ctx.fillText(fmt(xv,opts.xDigits??1),L+i*(w-L-R)/5-12,h-B+22);ctx.fillText(fmt(yv,opts.yDigits??1),8,T+i*(h-T-B)/5+4)}if(opts.meanLines){ctx.strokeStyle='#b42318';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X(opts.meanLines.mx),T);ctx.lineTo(X(opts.meanLines.mx),h-B);ctx.stroke();ctx.beginPath();ctx.moveTo(L,Y(opts.meanLines.my));ctx.lineTo(w-R,Y(opts.meanLines.my));ctx.stroke()}if(opts.line){const y1=opts.line.b0+opts.line.b1*b.xmin,y2=opts.line.b0+opts.line.b1*b.xmax;ctx.strokeStyle=opts.line.color||'#a75c00';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X(b.xmin),Y(y1));ctx.lineTo(X(b.xmax),Y(y2));ctx.stroke()}if(opts.curve){ctx.strokeStyle=opts.curve.color||'#2e7d32';ctx.lineWidth=3;ctx.beginPath();for(let i=0;i<=160;i++){const x=b.xmin+i*(b.xmax-b.xmin)/160,y=opts.curve.a+opts.curve.b*x+opts.curve.c*x*x;if(i===0)ctx.moveTo(X(x),Y(y));else ctx.lineTo(X(x),Y(y))}ctx.stroke()}for(const[i,p]of points.entries()){ctx.fillStyle=p.color||opts.pointColor||'#0260b5';ctx.beginPath();ctx.arc(X(p.x),Y(p.y),opts.pointRadius||6,0,Math.PI*2);ctx.fill();if(opts.labels){ctx.fillStyle='#344054';ctx.font='12px Arial';ctx.fillText(String(i+1),X(p.x)+7,Y(p.y)-7)}}return{X,Y,b,L,R,T,B}}
+function seededNoise(i,seed=1){return Math.sin((i+1)*12.9898+seed*78.233)*43758.5453%1}function noiseVal(i,seed=1){const u=seededNoise(i,seed);return(u-Math.trunc(u))*2-1}
+let currentPattern='positive';const patternAnswers={positive:'linear-positive',negative:'linear-negative',none:'none',curve:'nonlinear',groups:'none',outlier:'linear-positive'};function patternData(type){const pts=[];for(let i=0;i<24;i++){const x=i/2;let y;if(type==='positive')y=3+1.7*x+noiseVal(i,2)*2.4;if(type==='negative')y=25-1.6*x+noiseVal(i,3)*2.4;if(type==='none')y=12+noiseVal(i,4)*10;if(type==='curve')y=3+0.55*(x-6)**2+noiseVal(i,5)*1.3;if(type==='groups')y=(i<12?5:18)+noiseVal(i,6)*2.5;if(type==='outlier')y=4+1.4*x+noiseVal(i,7)*1.8;pts.push({x,y})}if(type==='outlier')pts.push({x:13.5,y:38,color:'#b42318'});return pts}function renderPattern(){const pts=patternData(currentPattern),reg=regression(pts);drawScatter(document.getElementById('patternCanvas'),pts,{line:reg,pointRadius:5});document.getElementById('patternSlope').textContent=fmt(reg.b1,2);document.getElementById('patternR2').textContent=fmt(reg.r2,2);const names={positive:'lineare',negative:'lineare',none:'irregolare',curve:'curva',groups:'gruppi',outlier:'quasi lineare'};document.getElementById('patternShape').textContent=names[currentPattern];document.getElementById('patternN').textContent=pts.length}document.querySelectorAll('#patternButtons button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#patternButtons button').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentPattern=b.dataset.pattern;renderPattern();document.querySelectorAll('.patternChoice').forEach(x=>x.classList.remove('correct','wrong'));document.getElementById('patternFb').className='feedback'}));document.querySelectorAll('.patternChoice').forEach(b=>b.addEventListener('click',()=>{const ok=b.dataset.answer===patternAnswers[currentPattern];document.querySelectorAll('.patternChoice').forEach(x=>x.classList.remove('correct','wrong'));b.classList.add(ok?'correct':'wrong');const fb=document.getElementById('patternFb');fb.className='feedback show '+(ok?'ok':'err');fb.textContent=ok?'Lettura corretta della forma.':'Guarda di nuovo la nuvola: un numero come R² non sostituisce l’osservazione della forma.'}));renderPattern();
+const covPts=[
+{x:7,y:8,color:'#147d8d'},{x:6,y:6,color:'#147d8d'},
+{x:3,y:7,color:'#a75c00'},{x:4,y:6,color:'#a75c00'},
+{x:2,y:2,color:'#147d8d'},{x:4,y:4,color:'#147d8d'},
+{x:8,y:3,color:'#a75c00'},{x:6,y:4,color:'#a75c00'}
+],covReg=regression(covPts),covCanvas=document.getElementById('covCanvas');let covSelected=0,covMap;
+function drawCovariance(){covMap=drawScatter(covCanvas,covPts,{meanLines:{mx:covReg.mx,my:covReg.my},labels:true,bounds:{xmin:1,xmax:9,ymin:1,ymax:9}});const ctx=covCanvas.getContext('2d');ctx.fillStyle='rgba(1,64,130,.7)';ctx.font='bold 25px Georgia';ctx.fillText('II',covMap.X(2.0),covMap.Y(8.4));ctx.fillText('I',covMap.X(8.2),covMap.Y(8.4));ctx.fillText('III',covMap.X(2.0),covMap.Y(1.5));ctx.fillText('IV',covMap.X(8.0),covMap.Y(1.5));const p=covPts[covSelected];ctx.strokeStyle='#20242c';ctx.lineWidth=3;ctx.beginPath();ctx.arc(covMap.X(p.x),covMap.Y(p.y),11,0,Math.PI*2);ctx.stroke()}
+function selectCov(i){covSelected=i;drawCovariance();const p=covPts[i],dx=p.x-covReg.mx,dy=p.y-covReg.my,prod=dx*dy;document.getElementById('covDx').textContent=fmt(dx,2);document.getElementById('covDy').textContent=fmt(dy,2);document.getElementById('covProd').textContent=fmt(prod,2);document.getElementById('covSign').textContent=prod>=0?'Positivo':'Negativo'}
+function updateCorrelationSummary(){const n=covPts.length,mx=covReg.mx,my=covReg.my;let sxy=0,sxx=0,syy=0;for(const p of covPts){const dx=p.x-mx,dy=p.y-my;sxy+=dx*dy;sxx+=dx*dx;syy+=dy*dy}const sampleCov=sxy/(n-1),r=sxy/Math.sqrt(sxx*syy),ar=Math.abs(r);document.getElementById('covSample').textContent=fmt(sampleCov,3);document.getElementById('corrR').textContent=fmt(r,3);document.getElementById('corrStrength').textContent=ar<.3?'Debole':ar<.7?'Moderata':'Forte'}
+drawCovariance();covCanvas.addEventListener('click',e=>{const r=covCanvas.getBoundingClientRect(),mx=(e.clientX-r.left)*covCanvas.width/r.width,my=(e.clientY-r.top)*covCanvas.height/r.height;let best=0,bd=Infinity;covPts.forEach((p,i)=>{const d=(covMap.X(p.x)-mx)**2+(covMap.Y(p.y)-my)**2;if(d<bd){bd=d;best=i}});selectCov(best)});selectCov(0);updateCorrelationSummary();
+let regSeed=9;function regData(){const slope=+document.getElementById('regSlope').value,noise=+document.getElementById('regNoise').value,scale=+document.getElementById('regUnit').value,pts=[];for(let i=1;i<=25;i++){const x=i/2,y=(5+slope*x+noise*noiseVal(i,regSeed))*scale;pts.push({x,y})}return pts}function updateReg(){const pts=regData(),reg=regression(pts),scale=+document.getElementById('regUnit').value;drawScatter(document.getElementById('regCanvas'),pts,{line:reg,yDigits:scale===1?1:0});document.getElementById('regSlopeVal').textContent=fmt(+document.getElementById('regSlope').value,2);document.getElementById('regNoiseVal').textContent=fmt(+document.getElementById('regNoise').value,1);document.getElementById('regB0').textContent=fmt(reg.b0,scale===1?2:0);document.getElementById('regB1').textContent=fmt(reg.b1,scale===1?2:0);document.getElementById('regR2').textContent=fmt(reg.r2,3);document.getElementById('regUnitKpi').textContent=scale===1?'migliaia €':'euro'}['regSlope','regNoise','regUnit'].forEach(id=>document.getElementById(id).addEventListener('input',updateReg));updateReg();
+const olsPts=Array.from({length:12},(_,i)=>{const x=i+1;return{x,y:4+1.8*x+2.2*noiseVal(i,31)}}),olsReg=regression(olsPts),olsCanvas=document.getElementById('olsCanvas');
+function sseFor(points,b0,b1){return points.reduce((s,p)=>s+(p.y-(b0+b1*p.x))**2,0)}
+function drawLineOnMap(ctx,map,reg,color,width=3,dash=[]){const y1=reg.b0+reg.b1*map.b.xmin,y2=reg.b0+reg.b1*map.b.xmax;ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();ctx.moveTo(map.X(map.b.xmin),map.Y(y1));ctx.lineTo(map.X(map.b.xmax),map.Y(y2));ctx.stroke();ctx.restore()}
+function updateOLS(){const b0=+document.getElementById('trialB0').value,b1=+document.getElementById('trialB1').value,map=drawScatter(olsCanvas,olsPts,{bounds:{xmin:0,xmax:13,ymin:0,ymax:34}}),ctx=olsCanvas.getContext('2d');drawLineOnMap(ctx,map,olsReg,'#a75c00',3,[9,6]);ctx.save();ctx.strokeStyle='rgba(109,91,208,.68)';ctx.lineWidth=2;for(const p of olsPts){const yh=b0+b1*p.x;ctx.beginPath();ctx.moveTo(map.X(p.x),map.Y(p.y));ctx.lineTo(map.X(p.x),map.Y(yh));ctx.stroke()}ctx.restore();drawLineOnMap(ctx,map,{b0,b1},'#6d5bd0',3);document.getElementById('trialB0Val').textContent=fmt(b0,2);document.getElementById('trialB1Val').textContent=fmt(b1,2);document.getElementById('trialSSE').textContent=fmt(sseFor(olsPts,b0,b1),2);document.getElementById('minSSE').textContent=fmt(sseFor(olsPts,olsReg.b0,olsReg.b1),2);document.getElementById('olsB0').textContent=fmt(olsReg.b0,2);document.getElementById('olsB1').textContent=fmt(olsReg.b1,2)}
+['trialB0','trialB1'].forEach(id=>document.getElementById(id).addEventListener('input',updateOLS));document.getElementById('useOLS').addEventListener('click',()=>{document.getElementById('trialB0').value=olsReg.b0;document.getElementById('trialB1').value=olsReg.b1;updateOLS()});updateOLS();
+const A=[1,2,3,4,5].map(x=>({x,y:2*x,color:'#147d8d'})),B=[1,2,3,4,5].map(x=>({x,y:3*x,color:'#6d5bd0'})),both=[...A,...B],c4=document.getElementById('twoLinesCanvas'),ctx4=c4.getContext('2d'),map4=drawScatter(c4,both,{bounds:{xmin:0,xmax:6,ymin:0,ymax:16}});ctx4.strokeStyle='#147d8d';ctx4.lineWidth=3;ctx4.beginPath();ctx4.moveTo(map4.X(1),map4.Y(2));ctx4.lineTo(map4.X(5),map4.Y(10));ctx4.stroke();ctx4.strokeStyle='#6d5bd0';ctx4.beginPath();ctx4.moveTo(map4.X(1),map4.Y(3));ctx4.lineTo(map4.X(5),map4.Y(15));ctx4.stroke();document.querySelectorAll('.qSame').forEach(b=>b.addEventListener('click',()=>{const ok=b.dataset.ok==='1';document.querySelectorAll('.qSame').forEach(x=>x.classList.remove('correct','wrong'));b.classList.add(ok?'correct':'wrong');const fb=document.getElementById('sameFb');fb.className='feedback show '+(ok?'ok':'err');fb.textContent=ok?'Esatto: R² misura l’aderenza alla retta; la pendenza misura la variazione attesa di Y per un’unità di X.':'Pendenza e R² non sono la stessa misura.'}));
+function discountData(){const opt=+document.getElementById('optDiscount').value;return[0,10,20,30,40].map(x=>({x,y:100-0.1*(x-opt)**2}))}function updateCurve(){const pts=discountData(),lin=regression(pts),quad=quadraticFit(pts);drawScatter(document.getElementById('curveCanvas'),pts,{line:{...lin,color:'#a75c00'},curve:{...quad,color:'#2e7d32'},bounds:{xmin:-5,xmax:45,ymin:45,ymax:110}});document.getElementById('optDiscountVal').textContent=document.getElementById('optDiscount').value+'%';document.getElementById('curveLinR2').textContent=fmt(lin.r2,3);document.getElementById('curveQuadR2').textContent=fmt(quad.r2,3);document.getElementById('curveSlope').textContent=fmt(lin.b1,3);document.getElementById('discountRows').innerHTML=pts.map(p=>`<tr><td>${p.x}%</td><td>${fmt(p.y,1)}</td></tr>`).join('')}document.getElementById('optDiscount').addEventListener('input',updateCurve);updateCurve();
+let exSeed=20,outlierMode='none';
+function exploreBaseData(){const slope=+document.getElementById('exSlope').value,curve=+document.getElementById('exCurve').value,noise=+document.getElementById('exNoise').value,scale=+document.getElementById('exScale').value,pts=[];for(let i=0;i<30;i++){const x=i/2,y=(10+slope*x+curve*(x-7.25)**2+noise*noiseVal(i,exSeed))*scale;pts.push({x,y})}return pts}
+function exploreData(){const basePts=exploreBaseData(),baseReg=regression(basePts),scale=+document.getElementById('exScale').value,pts=basePts.map(p=>({...p}));if(outlierMode==='influential'){const shift=(baseReg.b1>=0?-110:110)*scale;pts.push({x:30,y:baseReg.b0+baseReg.b1*30+shift,color:'#b42318'})}if(outlierMode==='leverage')pts.push({x:30,y:baseReg.b0+baseReg.b1*30,color:'#6d5bd0'});return{basePts,baseReg,pts}}
+function updateExplore(){const obj=exploreData(),reg=regression(obj.pts),scale=+document.getElementById('exScale').value,map=drawScatter(document.getElementById('exploreCanvas'),obj.pts,{yDigits:scale===1?1:0}),ctx=document.getElementById('exploreCanvas').getContext('2d');if(outlierMode!=='none')drawLineOnMap(ctx,map,obj.baseReg,'#7a8699',3,[9,6]);drawLineOnMap(ctx,map,reg,'#a75c00',3);document.getElementById('exSlopeVal').textContent=fmt(+document.getElementById('exSlope').value,2);document.getElementById('exCurveVal').textContent=fmt(+document.getElementById('exCurve').value,1);document.getElementById('exNoiseVal').textContent=fmt(+document.getElementById('exNoise').value,1);document.getElementById('exScaleVal').textContent=scale===1?'1×':'1.000×';document.getElementById('exB0').textContent=fmt(reg.b0,scale===1?2:0);document.getElementById('exB1').textContent=fmt(reg.b1,scale===1?2:0);document.getElementById('exR2').textContent=fmt(reg.r2,3);document.getElementById('exDeltaB1').textContent=fmt(reg.b1-obj.baseReg.b1,scale===1?3:1);document.getElementById('exOutlier').textContent=outlierMode==='none'?'Nessuno':outlierMode==='influential'?'Influente':'Estremo in X'}
+['exSlope','exCurve','exNoise','exScale'].forEach(id=>document.getElementById(id).addEventListener('input',updateExplore));document.querySelectorAll('#outlierButtons button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#outlierButtons button').forEach(x=>x.classList.remove('active'));b.classList.add('active');outlierMode=b.dataset.mode;updateExplore()}));document.getElementById('newNoise').addEventListener('click',()=>{exSeed++;updateExplore()});updateExplore();
+
+
+const predictionCfg={b0:11.84,b1:2.36,ser:6.10,n:30,xbar:8.10,sxx:387.1,t:2.048,observedMin:2,observedMax:15};
+function drawPredictionIntervals(x0,yhat,meanLow,meanHigh,predLow,predHigh){
+  const canvas=document.getElementById('predictionCanvas'),ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height,L=150,R=42,T=50,B=76;
+
+  /* La scala resta fissa per tutto il campo del cursore.
+     Nella versione precedente veniva ricalcolata a ogni movimento:
+     per questo gli intervalli sembravano immobili. */
+  const minVal=-5,maxVal=80;
+  const X=v=>L+(v-minVal)/(maxVal-minVal)*(w-L-R);
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.fillStyle='#344054';
+  ctx.font='bold 14px Arial';
+  ctx.fillText('Investimento x₀ = '+fmt(x0,1)+' migliaia €',L,T-19);
+
+  for(let v=0;v<=80;v+=10){
+    const x=X(v);
+    ctx.strokeStyle='#e1e7ee';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(x,T);
+    ctx.lineTo(x,h-B);
+    ctx.stroke();
+
+    ctx.fillStyle='#667085';
+    ctx.font='12px Arial';
+    ctx.fillText(String(v),x-7,h-B+23);
+  }
+
+  ctx.strokeStyle='#344054';
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.moveTo(X(minVal),h-B);
+  ctx.lineTo(X(maxVal),h-B);
+  ctx.stroke();
+
+  ctx.fillStyle='#344054';
+  ctx.font='bold 13px Arial';
+  ctx.fillText('Vendite incrementali previste (migliaia €)',w/2-105,h-20);
+
+  const yPred=160,yMean=300;
+
+  ctx.fillStyle='#344054';
+  ctx.font='bold 14px Arial';
+  ctx.fillText('Singola nuova',12,yPred-5);
+  ctx.fillText('campagna (IP)',12,yPred+15);
+  ctx.fillText('Risposta media',12,yMean-5);
+  ctx.fillText('(IC)',12,yMean+15);
+
+  /* Linea verticale comune: rende evidente lo spostamento della previsione. */
+  ctx.strokeStyle='rgba(46,125,50,.42)';
+  ctx.lineWidth=2;
+  ctx.setLineDash([7,6]);
+  ctx.beginPath();
+  ctx.moveTo(X(yhat),T+24);
+  ctx.lineTo(X(yhat),h-B);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.strokeStyle='#a75c00';
+  ctx.lineWidth=13;
+  ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.moveTo(X(predLow),yPred);
+  ctx.lineTo(X(predHigh),yPred);
+  ctx.stroke();
+
+  ctx.strokeStyle='#0260b5';
+  ctx.lineWidth=13;
+  ctx.beginPath();
+  ctx.moveTo(X(meanLow),yMean);
+  ctx.lineTo(X(meanHigh),yMean);
+  ctx.stroke();
+
+  [predLow,predHigh].forEach(v=>{
+    ctx.strokeStyle='#7a4300';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(X(v),yPred-18);
+    ctx.lineTo(X(v),yPred+18);
+    ctx.stroke();
+  });
+
+  [meanLow,meanHigh].forEach(v=>{
+    ctx.strokeStyle='#014082';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(X(v),yMean-18);
+    ctx.lineTo(X(v),yMean+18);
+    ctx.stroke();
+  });
+
+  ctx.fillStyle='#2e7d32';
+  ctx.beginPath();
+  ctx.arc(X(yhat),yPred,9,0,Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(X(yhat),yMean,9,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle='#344054';
+  ctx.font='13px Arial';
+  ctx.fillText('['+fmt(predLow,1)+'; '+fmt(predHigh,1)+']',X((predLow+predHigh)/2)-43,yPred-27);
+  ctx.fillText('['+fmt(meanLow,1)+'; '+fmt(meanHigh,1)+']',X((meanLow+meanHigh)/2)-43,yMean-27);
+
+  ctx.fillStyle='#2e7d32';
+  ctx.font='bold 13px Arial';
+  ctx.fillText('ŷ₀ = '+fmt(yhat,1),Math.min(X(yhat)+11,w-90),yPred+40);
+}
+
+function drawPredictionWidths(x0){
+  const c=predictionCfg,canvas=document.getElementById('predictionWidthCanvas'),ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height,L=72,R=35,T=35,B=62;
+  const xmin=0,xmax=20,ymin=0,ymax=16;
+  const X=x=>L+(x-xmin)/(xmax-xmin)*(w-L-R);
+  const Y=y=>T+(ymax-y)/(ymax-ymin)*(h-T-B);
+
+  ctx.clearRect(0,0,w,h);
+
+  for(let y=0;y<=16;y+=4){
+    const yy=Y(y);
+    ctx.strokeStyle='#e1e7ee';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(L,yy);ctx.lineTo(w-R,yy);ctx.stroke();
+    ctx.fillStyle='#667085';ctx.font='12px Arial';ctx.fillText(String(y),35,yy+4);
+  }
+  for(let x=0;x<=20;x+=2){
+    const xx=X(x);
+    ctx.strokeStyle='#eef2f6';ctx.beginPath();ctx.moveTo(xx,T);ctx.lineTo(xx,h-B);ctx.stroke();
+    ctx.fillStyle='#667085';ctx.fillText(String(x),xx-5,h-B+22);
+  }
+
+  ctx.strokeStyle='#344054';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.lineTo(w-R,h-B);ctx.stroke();
+
+  ctx.fillStyle='#344054';ctx.font='bold 13px Arial';
+  ctx.fillText('Semi-ampiezza (migliaia €)',12,T-12);
+  ctx.fillText('Investimento x₀ (migliaia €)',w/2-80,h-18);
+
+  function marginsAt(x){
+    const leverage=1/c.n+(x-c.xbar)**2/c.sxx;
+    return {
+      mean:c.t*c.ser*Math.sqrt(leverage),
+      pred:c.t*c.ser*Math.sqrt(1+leverage)
+    };
+  }
+
+  ctx.strokeStyle='#0260b5';ctx.lineWidth=3;ctx.beginPath();
+  for(let i=0;i<=200;i++){
+    const x=xmin+(xmax-xmin)*i/200,m=marginsAt(x).mean;
+    if(i===0)ctx.moveTo(X(x),Y(m));else ctx.lineTo(X(x),Y(m));
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle='#a75c00';ctx.lineWidth=3;ctx.beginPath();
+  for(let i=0;i<=200;i++){
+    const x=xmin+(xmax-xmin)*i/200,m=marginsAt(x).pred;
+    if(i===0)ctx.moveTo(X(x),Y(m));else ctx.lineTo(X(x),Y(m));
+  }
+  ctx.stroke();
+
+  const current=marginsAt(x0),xx=X(x0);
+  ctx.strokeStyle='rgba(52,64,84,.45)';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+  ctx.beginPath();ctx.moveTo(xx,T);ctx.lineTo(xx,h-B);ctx.stroke();ctx.setLineDash([]);
+
+  ctx.fillStyle='#0260b5';ctx.beginPath();ctx.arc(xx,Y(current.mean),7,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#a75c00';ctx.beginPath();ctx.arc(xx,Y(current.pred),7,0,Math.PI*2);ctx.fill();
+
+  ctx.fillStyle='#0260b5';ctx.font='bold 12px Arial';
+  ctx.fillText('IC: ±'+fmt(current.mean,2),Math.min(xx+10,w-115),Y(current.mean)-9);
+  ctx.fillStyle='#a75c00';
+  ctx.fillText('IP: ±'+fmt(current.pred,2),Math.min(xx+10,w-115),Y(current.pred)-9);
+
+  ctx.strokeStyle='rgba(1,64,130,.35)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(X(c.xbar),T);ctx.lineTo(X(c.xbar),h-B);ctx.stroke();
+  ctx.fillStyle='#014082';ctx.font='12px Arial';
+  ctx.fillText('x̄=8,1',X(c.xbar)-20,T+15);
+}
+
+function updatePrediction(){
+  const c=predictionCfg,x0=+document.getElementById('predX').value;
+  const yhat=c.b0+c.b1*x0;
+  const leverage=1/c.n+(x0-c.xbar)**2/c.sxx;
+  const meanMargin=c.t*c.ser*Math.sqrt(leverage);
+  const predMargin=c.t*c.ser*Math.sqrt(1+leverage);
+  const meanLow=yhat-meanMargin,meanHigh=yhat+meanMargin;
+  const predLow=yhat-predMargin,predHigh=yhat+predMargin;
+
+  document.getElementById('predXVal').textContent=fmt(x0,1);
+  document.getElementById('predY').textContent=fmt(yhat,2);
+  document.getElementById('predMeanCI').textContent='['+fmt(meanLow,2)+'; '+fmt(meanHigh,2)+']';
+  document.getElementById('predIndividualPI').textContent='['+fmt(predLow,2)+'; '+fmt(predHigh,2)+']';
+  document.getElementById('predMeanMargin').textContent='±'+fmt(meanMargin,2);
+  document.getElementById('predPredictionMargin').textContent='±'+fmt(predMargin,2);
+
+  const note=document.getElementById('predRangeNote');
+  if(x0<c.observedMin||x0>c.observedMax){
+    note.className='warn';
+    note.innerHTML='<strong>Extrapolazione:</strong> x₀ è fuori dal campo circa 2–15 osservato nell’esercizio. La retta viene prolungata oltre i dati e la previsione richiede maggiore cautela.';
+  }else{
+    note.className='tip';
+    note.innerHTML='<strong>Interpolazione:</strong> x₀ è compreso nel campo circa 2–15 osservato nell’esercizio.';
+  }
+  drawPredictionIntervals(x0,yhat,meanLow,meanHigh,predLow,predHigh);
+  drawPredictionWidths(x0);
+}
+document.getElementById('predX').addEventListener('input',updatePrediction);
+updatePrediction();
+
+document.querySelectorAll('.qInf').forEach(b=>b.addEventListener('click',()=>{const ok=b.dataset.ok==='1';document.querySelectorAll('.qInf').forEach(x=>x.classList.remove('correct','wrong'));b.classList.add(ok?'correct':'wrong');const fb=document.getElementById('infFb');fb.className='feedback show '+(ok?'ok':'err');fb.textContent=ok?'Esatto: il p-value è calcolato sotto H₀ e sotto le ipotesi del modello.':'Il p-value non è la probabilità che H₀ sia vera e non coincide con R².'}));
+
+const quiz=[
+{q:'Che cosa deve essere osservato prima di interpretare R²?',a:['Solo la media di Y','Il diagramma di dispersione','Solo la numerosità'],ok:1},
+{q:'Perché il fattore n−1 non compare nella formula finale di r?',a:['Perché si semplifica tra covarianza e deviazioni standard calcolate coerentemente','Perché la correlazione non usa le medie','Perché ρ e r sono sempre identici'],ok:0},
+{q:'Che cosa minimizza il metodo dei minimi quadrati?',a:['La somma dei residui','La somma dei quadrati dei residui, SSE','La somma dei valori di X'],ok:1},
+{q:'Nella scomposizione SST = SSR + SSE, che cosa rappresenta SSR?',a:['La variabilità di Y descritta dalla regressione','La variabilità rimasta nei residui','La varianza di X'],ok:0},
+{q:'Che cosa misura β̂₁?',a:['La quota di variabilità descritta','La variazione media prevista di Y per un’unità in più di X','Il p-value del modello'],ok:1},
+{q:'Due rette perfette con pendenze 2 e 3 hanno...',a:['R² diverso','R² uguale a 1 in entrambi i casi','R² uguale alla pendenza'],ok:1},
+{q:'Una parabola simmetrica può avere...',a:['R² lineare vicino a zero','sempre R² lineare pari a uno','nessuna relazione tra X e Y'],ok:0},
+{q:'Per test t e intervalli esatti in un piccolo campione si assume...',a:['normalità condizionata degli errori','normalità marginale obbligatoria di X','che R² sia maggiore di 0,50'],ok:0},
+{q:'Nel test H₀:β₁=0, la statistica t è...',a:['β̂₁/SE(β̂₁)','R²/β̂₁','SSR/SST'],ok:0},
+{q:'Un punto estremo in X collocato sulla retta originaria...',a:['deve alterare molto i coefficienti','può lasciare quasi invariati β̂₀ e β̂₁','rende sempre R² nullo'],ok:1},
+{q:'Che cosa misura il SER?',a:['La distanza verticale tipica tra valori osservati e valori stimati','L’incertezza della sola pendenza','La quota percentuale di variabilità spiegata'],ok:0}
+];let qi=0,score=0;const quizBox=document.getElementById('quizBox');function renderQuiz(){document.getElementById('quizProgress').style.width=(qi/quiz.length*100)+'%';if(qi>=quiz.length){quizBox.innerHTML=`<div class="card"><div class="card-head light">Risultato</div><div class="card-body"><p style="font-size:34px;font-weight:900;color:var(--blue)">${score}/${quiz.length}</p><p>${score>=8?'Ottimo: sai distinguere forma, pendenza e capacità descrittiva.':score>=6?'Buon risultato: rivedi soprattutto non linearità e cambiamenti di scala.':'Rivedi le sezioni sulla forma della nuvola e sul significato di R².'}</p></div></div>`;document.getElementById('quizProgress').style.width='100%';return}const item=quiz[qi];quizBox.innerHTML=`<div class="card"><div class="card-head light">Domanda ${qi+1} di ${quiz.length}</div><div class="card-body"><h3>${item.q}</h3>${item.a.map((x,i)=>`<button class="choice quizchoice" data-i="${i}">${x}</button>`).join('')}<div id="quizFb" class="feedback"></div></div></div>`;document.querySelectorAll('.quizchoice').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.i,ok=i===item.ok;document.querySelectorAll('.quizchoice').forEach(x=>x.disabled=true);b.classList.add(ok?'correct':'wrong');if(!ok)document.querySelectorAll('.quizchoice')[item.ok].classList.add('correct');if(ok)score++;const fb=document.getElementById('quizFb');fb.className='feedback show '+(ok?'ok':'err');fb.innerHTML=(ok?'Risposta corretta.':'Rivedi il concetto evidenziato.')+` <button class="btn primary" id="nextQuiz">Continua</button>`;document.getElementById('nextQuiz').addEventListener('click',()=>{qi++;renderQuiz()})}))}document.getElementById('restartQuiz').addEventListener('click',()=>{qi=0;score=0;renderQuiz()});renderQuiz();
+</script>
+
+<footer class="salini-copyright" style="margin:26px auto 8px;max-width:1180px;padding:14px 18px;text-align:center;font-size:12px;line-height:1.45;color:#667085;border-top:1px solid #dce5ef;">© Silvia Salini · Materiale didattico. Tutti i diritti riservati.</footer>
+</body></html>
